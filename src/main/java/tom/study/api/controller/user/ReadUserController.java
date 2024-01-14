@@ -1,12 +1,20 @@
 package tom.study.api.controller.user;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class ReadUserController {
-    @GetMapping("/login")
+    @RequestMapping("/login")
     public String login() {
         return "login";
+    }
+
+    @RequestMapping("/basic")
+    public String basic(Model model) {
+        model.addAttribute("data", "test");
+        return "basic";
     }
 }
