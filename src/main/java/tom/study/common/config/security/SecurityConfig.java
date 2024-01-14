@@ -18,26 +18,37 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.PrintWriter;
 import java.util.List;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity()
+
 public class SecurityConfig {
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests((authorizeRequests) ->
-//                        authorizeRequests.requestMatchers("/", "/login**", "/error", "/api/customer/**").permitAll()
-//                        .requestMatchers("/api/user").hasRole("test"))
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        //.csrf(AbstractHttpConfigurer::disable).
+        http.authorizeRequests()
+                .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
+                .anyRequest().authenticated().and()
+                .formLogin(withDefaults()
+
+        );
+//                .authorizeHttpRequests(
+//                        (authorizeRequests) -> authorizeRequests
+//                                .requestMatchers("/", "/login**", "/error", "/api/customer/**").permitAll()
+//                                .requestMatchers("/api/user").hasRole("test") )
 //                .exceptionHandling((exceptionConfig) ->
 //                        exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler)
 //              ); // 401 403 관련 예외처리
-//
-//        return http.build();
-//    }
+
+        return http.build();
+    }
 
     @Bean
     public UserDetailsServiceImpl userDetailsService() {

@@ -9,46 +9,75 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import tom.study.common.config.security.UserDetailsServiceImpl;
-import tom.study.domain.user.user.model.entity.Authority;
-import tom.study.domain.user.user.model.entity.User;
-import tom.study.domain.user.user.repository.UserRepository;
-import tom.study.domain.user.user.repository.custom.AuthorityRepository;
-import tom.study.domain.user.user.service.UserService;
+import tom.study.domain.user.model.entity.Authority;
+import tom.study.domain.user.model.entity.User;
+import tom.study.domain.user.repository.UserRepository;
+import tom.study.domain.user.repository.custom.AuthorityRepository;
+import tom.study.domain.user.service.UserService;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+
+import static tom.study.domain.user.model.entity.User.EncryptionAlgorithm.BCRYPT;
 
 @SpringBootTest
 @Slf4j
 public class SpringSecurityTest {
     @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    UserDetailsServiceImpl userDetailsServiceImpl;
     //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     @Autowired
     UserRepository userRepository;
     @Autowired
     AuthorityRepository authorityRepository;
+
+    @Autowired
+    UserDetailsService userDetailsService;
+
+    @Autowired
+    UserService userService;
+
     @Test
-    public void CreateUser() {
+    public void CreateUser1() {
         User user = new User();
-        user.setUsername("test0");
+        user.setUsername("richard");
         user.setPassword("1234");
+        user.setAlgorithm(BCRYPT);
         userRepository.save(user);
 
-        Authority authority = new Authority();
-        authority.setName("Read");
-        authority.setUser(user);
-        authorityRepository.save(authority);
+        Authority authority1 = new Authority();
+        authority1.setName("ROLE_MANAGER");
+        authority1.setUser(user);
+        authorityRepository.save(authority1);
+
+//        Authority authority2 = new Authority();
+//        authority2.setName("WRITE");
+//        authority2.setUser(user);
+//        authorityRepository.save(authority2);
+//        log.info("user's auth 3: {}", user.getAuthorities());
+    }
+
+    @Test
+    public void GetUser1() {
+        UserDetails userDetails = userService.loadUserByUsername("test6");
+        Collection<? extends GrantedAuthority> auths = userDetails.getAuthorities();
+    }
+
+    @Test
+    public void GetUser2() {
+        UserDetails userA = org.springframework.security.core.userdetails.User
+                .withUsername("jinseok")
+                .password("1234")
+                .authorities("WRITE", "READ", "UPDATE")
+                .roles("qwe")
+                .build();
     }
 
     @Test
     public void securityTest1() {
-        UserDetails userDetails = userDetailsService.loadUserByUsername("richard");
+        UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername("richard");
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
-        log.info("authorities: {}", authorities.toString());
         if (authorities.stream().anyMatch(authority -> authority.getAuthority().equals("SUPER"))) {
             log.info("현재 사용자 {}는 'SUPER' 권한이 있습니다.", userDetails.getUsername());
         } else {
