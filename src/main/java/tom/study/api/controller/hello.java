@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class hello {
     @GetMapping("hello")
     public String hello() {
-
+        log.info("hello start");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info(authentication.getName());
         return "hello";
@@ -23,7 +23,8 @@ public class hello {
     public String getMain1() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
-
+        log.info("getAuthorities: {}",authentication.getAuthorities());
+        log.info("getCredentials: {}",authentication.getCredentials());
         String password = (authentication.getCredentials() == null) ?
                 "보안을 위한 eraseCredentialsAfterAuthentication 정책에 의해 성공적으로 null 처리 되었습니다." :
                 authentication.getCredentials().toString() + "입니다.";

@@ -1,6 +1,7 @@
 package tom.study.common.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.FilterChain;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +21,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.debug.DebugFilter;
+import tom.study.common.config.security.filter.RequestValidationFilter;
 
 import java.io.PrintWriter;
 import java.util.List;
@@ -27,18 +31,27 @@ import java.util.List;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-@EnableWebSecurity()
-
+@EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final RequestValidationFilter requestValidationFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        //.csrf(AbstractHttpConfigurer::disable).
-        http.authorizeRequests()
-                .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
-                .anyRequest().authenticated().and()
-                .formLogin(withDefaults()
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(withDefaults())
+                .formLogin(withDefaults())
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/hello").hasAnyAuthority("ROLE_ADMIN")
+                        .anyRequest().authenticated()
+                );
+//                .exceptionHandling((exceptionConfig) ->
+//                        exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler));
 
-        );
+//        http    .csrf(AbstractHttpConfigurer::disable)
+//                .formLogin(withDefaults())
+//                .addFilterBefore(requestValidationFilter, BasicAuthenticationFilter.class)
+//                .formLogin(withDefaults())
 //                .authorizeHttpRequests(
 //                        (authorizeRequests) -> authorizeRequests
 //                                .requestMatchers("/", "/login**", "/error", "/api/customer/**").permitAll()
@@ -57,10 +70,10 @@ public class SecurityConfig {
         return new UserDetailsServiceImpl(List.of(tom, richard));
     }
 
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
-//    }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+    }
 
     private final AuthenticationEntryPoint unauthorizedEntryPoint =
             (request, response, authException) -> {
