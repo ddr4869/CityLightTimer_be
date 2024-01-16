@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ErrorResponse {
 
-    private final HttpStatusCode httpStatusCode;
+    private final HttpStatusCode status;
     private final String code;
     private final String message;
 

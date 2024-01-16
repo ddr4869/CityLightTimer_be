@@ -20,7 +20,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ReadReservationController {
     private final ReadReservationUsecase readReservationUsecase;
-
     @GetMapping("/view/lists")
     public List<Reservation> getAllReservations() {
         ReservationQueryAllRequest reservationQueryAllRequest = new ReservationQueryAllRequest();
@@ -29,7 +28,6 @@ public class ReadReservationController {
 
     @GetMapping("/view/{id}")
     public Reservation getReservation(@PathVariable("id") Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         ReservationQueryRequest reservationQueryRequest = new ReservationQueryRequest();
         reservationQueryRequest.setId(id);
         return readReservationUsecase.execute(reservationQueryRequest);

@@ -1,22 +1,29 @@
 package tom.study.api.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tom.study.common.config.security.jwt.JwtUtil;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 @RestController
 @Slf4j
+@RequiredArgsConstructor
 public class hello {
-    @GetMapping("hello")
-    public String hello() {
-        log.info("hello start");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info(authentication.getName());
-        return "hello";
 
+    //private final JwtUtil jwtUtil;
+
+    @GetMapping("hello")
+    public String hello() throws NoSuchAlgorithmException, InvalidKeySpecException {
+//        String token = jwtUtil.createJwt("tom",10000L);
+//        log.info("jwtToken: {}", token);
+        return "token";
     }
 
     @GetMapping("/")

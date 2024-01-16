@@ -3,6 +3,7 @@ package tom.study.security;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import tom.study.api.controller.reservation.model.ReservationQueryRequest;
 import tom.study.api.usecase.reservation.ReadReservationUsecase;
 import tom.study.common.config.security.UserDetailsServiceImpl;
+import tom.study.common.config.security.jwt.JwtUtil;
 import tom.study.domain.reservation.model.entity.Reservation;
 import tom.study.domain.user.model.entity.Authority;
 import tom.study.domain.user.model.entity.User;
@@ -21,6 +23,8 @@ import tom.study.domain.user.repository.UserRepository;
 import tom.study.domain.user.repository.custom.AuthorityRepository;
 import tom.study.domain.user.service.UserService;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 
 import static tom.study.domain.user.model.entity.User.EncryptionAlgorithm.BCRYPT;
@@ -36,6 +40,10 @@ public class SpringSecurityTest {
     AuthorityRepository authorityRepository;
     @Autowired
     ReadReservationUsecase readReservationUsecase;
+
+    @Value("${jwt.secret}")
+    private String secretKey;
+
 
     @Test
     public void CreateUser1() {
@@ -112,5 +120,11 @@ public class SpringSecurityTest {
         Reservation reservation = readReservationUsecase.execute(reservationQueryRequest);
     }
 
+    @Test
+    public void jwtTest1() throws NoSuchAlgorithmException, InvalidKeySpecException {
+        JwtUtil jwtUtil = new JwtUtil();
+        String jwtStr = jwtUtil.createJwt("tom", 10000L);
+        log.info("token: {}", jwtStr);
+    }
 
 }

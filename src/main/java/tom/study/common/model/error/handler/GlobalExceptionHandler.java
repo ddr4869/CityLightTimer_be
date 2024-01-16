@@ -1,6 +1,7 @@
 package tom.study.common.model.error.handler;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -9,7 +10,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import tom.study.common.config.security.SecurityConfig;
 import tom.study.common.model.error.errorCode.CommonErrorCode;
@@ -30,12 +33,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(errorCode);
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Object> handleCustomException(BadRequestException e) {
+        log.warn("handleBadRequest", e);
+        ErrorCode errorCode = CommonErrorCode.BAD_REQUEST;
+        return handleExceptionInternal(errorCode);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Object> handleCustomException(MethodArgumentTypeMismatchException e) {
+        log.warn("MethodArgumentTypeMismatchException", e);
+        ErrorCode errorCode = CommonErrorCode.INVALID_PARAMETER;
+        return handleExceptionInternal(errorCode);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException e) {
         log.warn("handleIllegalArgument", e);
         ErrorCode errorCode = CommonErrorCode.INVALID_PARAMETER;
         return handleExceptionInternal(errorCode, e.getMessage());
     }
+
 
     @Override
     public ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -73,7 +91,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private ErrorResponse makeErrorResponse(ErrorCode errorCode) {
         return ErrorResponse.builder()
-                .httpStatusCode(errorCode.getHttpStatus())
+                .status(errorCode.getHttpStatus())
                 .code(errorCode.name())
                 .message(errorCode.getMessage())
                 .build();
@@ -82,7 +100,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private ErrorResponse makeErrorResponse(ErrorCode errorCode, String message) {
         return ErrorResponse.builder()
-                .httpStatusCode(errorCode.getHttpStatus())
+                .status(errorCode.getHttpStatus())
                 .code(errorCode.name())
                 .message(message)
                 .build();
@@ -97,7 +115,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .collect(Collectors.toList());
 
         return ErrorResponse.builder()
-                .httpStatusCode(errorCode.getHttpStatus())
+                .status(errorCode.getHttpStatus())
                 .code(errorCode.name())
                 .message(errorCode.getMessage())
                 .errors(validationErrorList)
