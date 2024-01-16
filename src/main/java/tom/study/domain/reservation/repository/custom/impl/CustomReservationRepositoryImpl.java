@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import tom.study.domain.customer.model.entity.QCustomer;
-import tom.study.domain.item.entity2.Member;
 import tom.study.domain.reservation.model.entity.QReservation;
 import tom.study.domain.reservation.model.entity.Reservation;
 import tom.study.domain.reservation.repository.custom.CustomReservationRepository;

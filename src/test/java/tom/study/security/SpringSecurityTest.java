@@ -10,7 +10,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import tom.study.api.controller.reservation.model.ReservationQueryRequest;
+import tom.study.api.usecase.reservation.ReadReservationUsecase;
 import tom.study.common.config.security.UserDetailsServiceImpl;
+import tom.study.domain.reservation.model.entity.Reservation;
 import tom.study.domain.user.model.entity.Authority;
 import tom.study.domain.user.model.entity.User;
 import tom.study.domain.user.repository.UserRepository;
@@ -26,41 +30,41 @@ import static tom.study.domain.user.model.entity.User.EncryptionAlgorithm.BCRYPT
 public class SpringSecurityTest {
     @Autowired
     UserDetailsServiceImpl userDetailsServiceImpl;
-    //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     @Autowired
     UserRepository userRepository;
     @Autowired
     AuthorityRepository authorityRepository;
-
     @Autowired
-    UserDetailsService userDetailsService;
-
-    @Autowired
-    UserService userService;
+    ReadReservationUsecase readReservationUsecase;
 
     @Test
     public void CreateUser1() {
-        User user = new User();
-        user.setUsername("richard");
-        user.setPassword("1234");
-        user.setAlgorithm(BCRYPT);
-        userRepository.save(user);
+        User user1 = new User();
+        user1.setUsername("richard");
+        user1.setPassword("1234");
+        user1.setAlgorithm(BCRYPT);
+        userRepository.save(user1);
 
         Authority authority1 = new Authority();
-        authority1.setName("ROLE_MANAGER");
-        authority1.setUser(user);
+        authority1.setName("ROLE_USER");
+        authority1.setUser(user1);
         authorityRepository.save(authority1);
 
-//        Authority authority2 = new Authority();
-//        authority2.setName("WRITE");
-//        authority2.setUser(user);
-//        authorityRepository.save(authority2);
-//        log.info("user's auth 3: {}", user.getAuthorities());
+        User user2 = new User();
+        user2.setUsername("tom");
+        user2.setPassword("1234");
+        user2.setAlgorithm(BCRYPT);
+        userRepository.save(user2);
+
+        Authority authority2 = new Authority();
+        authority2.setName("ROLE_ADMIN");
+        authority2.setUser(user2);
+        authorityRepository.save(authority2);
     }
 
     @Test
     public void GetUser1() {
-        UserDetails userDetails = userService.loadUserByUsername("test6");
+        UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername("tom");
         Collection<? extends GrantedAuthority> auths = userDetails.getAuthorities();
     }
 
@@ -98,4 +102,15 @@ public class SpringSecurityTest {
             log.info("현재 사용자 {}는 'SUPER' 권한이 없습니다.", authentication.getName());
         }
     }
+
+    @Test
+    public void getReservationTest() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("name: {}", authentication.getName());
+        ReservationQueryRequest reservationQueryRequest = new ReservationQueryRequest();
+        reservationQueryRequest.setId(1L);
+        Reservation reservation = readReservationUsecase.execute(reservationQueryRequest);
+    }
+
+
 }

@@ -8,7 +8,7 @@ import tom.study.domain.customer.model.entity.Customer;
 @Getter
 @Setter
 public class CustomerCreateRequest {
-    @NotEmpty
+    @NotEmpty(message = "customerName을 입력해 주세요.")
     private String customerName;
     @NotEmpty
     private String customerPw;

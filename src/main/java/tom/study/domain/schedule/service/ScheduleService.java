@@ -11,7 +11,8 @@ import tom.study.domain.schedule.repository.ScheduleRepository;
 @Slf4j
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
-    public void createSchedule(Schedule schedule) {
-        scheduleRepository.save(schedule);
+    public Schedule createSchedule(Schedule schedule) {
+        log.info("Create {}'s schedule", schedule.getMovieId());
+        return scheduleRepository.save(schedule);
     }
 }

@@ -18,6 +18,7 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
 
     public void createUser(Customer customer) {
+        log.info("Create {}", customer.getCustomerName());
         customerRepository.save(customer);
     }
 
@@ -25,8 +26,6 @@ public class CustomerService {
         Authentication authToken = new UsernamePasswordAuthenticationToken(
                 customerLoginRequest.getCustomerName(), customerLoginRequest.getCustomerPw());
         SecurityContextHolder.getContext().setAuthentication(authToken);
-
-
         //customerRepository.save(user);
     }
 }

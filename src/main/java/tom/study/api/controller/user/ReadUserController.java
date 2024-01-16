@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Controller // @RestController는 thymeleaf 적용이 안됨
 public class ReadUserController {
-//    @RequestMapping("/login")
-//    public String login() {
-//        return "login";
-//    }
+    @RequestMapping("/login")
+    public String login() {
+        return "login";
+    }
 
     @RequestMapping("/basic")
     public String basic(Model model) {

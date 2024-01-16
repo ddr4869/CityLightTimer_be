@@ -6,12 +6,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import tom.study.domain.customer.model.entity.Customer;
 import tom.study.domain.customer.repository.CustomerRepository;
 
 import java.util.List;
 
 
+@Component
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final List<UserDetails> userDetails;
 

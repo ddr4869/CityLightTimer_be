@@ -40,10 +40,14 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(withDefaults())
+//                .formLogin(form -> form
+//                        .loginPage("/login")
+//                        .permitAll())
                 .formLogin(withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/hello").hasAnyAuthority("ROLE_ADMIN")
-                        .anyRequest().authenticated()
+                                .anyRequest().permitAll()
+                        //.anyRequest().authenticated()
                 );
 //                .exceptionHandling((exceptionConfig) ->
 //                        exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler));
@@ -61,13 +65,6 @@ public class SecurityConfig {
 //              ); // 401 403 관련 예외처리
 
         return http.build();
-    }
-
-    @Bean
-    public UserDetailsServiceImpl userDetailsService() {
-        CustomUser tom = new CustomUser("tom","tom","1234","SUPER");
-        CustomUser richard = new CustomUser("richard","richard","1234","NORMAL");
-        return new UserDetailsServiceImpl(List.of(tom, richard));
     }
 
     @Bean
@@ -100,7 +97,6 @@ public class SecurityConfig {
     @Getter
     @RequiredArgsConstructor
     public class ErrorResponse {
-
         private final HttpStatus status;
         private final String message;
     }

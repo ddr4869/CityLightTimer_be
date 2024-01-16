@@ -10,7 +10,7 @@ import tom.study.api.controller.customer.model.CustomerCreateRequest;
 import tom.study.api.usecase.customer.WriteCustomerUsecase;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/customer")
 @RequiredArgsConstructor
 public class WriteCustomerController {
     private final WriteCustomerUsecase writeCustomerUsercase;

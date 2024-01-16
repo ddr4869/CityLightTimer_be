@@ -60,7 +60,7 @@ class StudyApplicationTests {
 
 	@Test
 	void queryAllReservation() {
-		List<Reservation> reservations = reservationService.queryAllReservation();
+		List<Reservation> reservations = reservationService.queryAllReservations();
 		for(Reservation r: reservations) {
 			log.info("{}, {}, {}, {}",r.getReservationPaymentId(), r.getCustomerId(),
 					r.getReservationPaymentScheduleId(), r.getReservationPaymentFilm());
