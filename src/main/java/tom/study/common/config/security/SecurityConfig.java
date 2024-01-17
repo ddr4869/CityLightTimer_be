@@ -24,6 +24,7 @@ import org.springframework.security.web.authentication.ui.DefaultLoginPageGenera
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.debug.DebugFilter;
 import tom.study.common.config.security.filter.RequestValidationFilter;
+import tom.study.common.config.security.login.LoginSuccessHandler;
 
 import java.io.PrintWriter;
 import java.util.List;
@@ -35,15 +36,20 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final RequestValidationFilter requestValidationFilter;
+    private final LoginSuccessHandler loginSuccessHandler;
+
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(withDefaults())
-//                .formLogin(form -> form
-//                        .loginPage("/login")
-//                        .permitAll())
-                .formLogin(withDefaults())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .successHandler(loginSuccessHandler)
+                        .permitAll())
+//                .formLogin(withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/hello").hasAnyAuthority("ROLE_ADMIN")
                                 .anyRequest().permitAll()
