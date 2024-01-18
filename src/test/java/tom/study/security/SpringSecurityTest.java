@@ -40,9 +40,8 @@ public class SpringSecurityTest {
     AuthorityRepository authorityRepository;
     @Autowired
     ReadReservationUsecase readReservationUsecase;
-
-    @Value("${jwt.secret}")
-    private String secretKey;
+    @Autowired
+    JwtUtil jwtUtil;
 
 
     @Test
@@ -99,10 +98,12 @@ public class SpringSecurityTest {
 
     @Test
     public void securityTest2() {
-        Authentication authToken = new UsernamePasswordAuthenticationToken("tom2", "1234");
+        Authentication authToken = new UsernamePasswordAuthenticationToken("tom2", "");
+        log.info("autho: {}",authToken.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        log.info("name: {}", authentication.getName());
         log.info("authorities: {}", authorities.toString());
         if (authorities.stream().anyMatch(authority -> authority.getAuthority().equals("SUPER"))) {
             log.info("현재 사용자 {}는 'SUPER' 권한이 있습니다.", authentication.getName());
@@ -127,4 +128,11 @@ public class SpringSecurityTest {
         log.info("token: {}", jwtStr);
     }
 
+    @Test
+    public void jwtTest2() throws NoSuchAlgorithmException, InvalidKeySpecException {
+        String access = jwtUtil.createAccessJwt("tom");
+        log.info("acess: {}", access);
+        Authentication authentication = jwtUtil.getAuthenticationFromToken(access);
+
+    }
 }

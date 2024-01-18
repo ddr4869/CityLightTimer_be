@@ -2,6 +2,7 @@ package tom.study.api.controller;
 
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tom.study.common.config.security.jwt.JwtUtil;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -23,14 +25,19 @@ public class hello {
 
     private final JwtUtil jwtUtil;
 
-    @GetMapping("hello")
-    public String hello(@CookieValue String cookie) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        log.info("Cookie: {}", cookie);
-        return "token";
+    @GetMapping("hello") // @CookieValue(name = "refresh") Cookie cookie
+    public String hello(HttpServletResponse response) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
+        log.info("hello test");
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        log.info("getAuthorities: {}",authentication.getName());
+        log.info("getAuthorities: {}",authentication.getAuthorities());
+        log.info("getCredentials: {}",authentication.getCredentials());
+        return "hello";
     }
 
     @GetMapping("/")
-    public String getMain1(@CookieValue("jwttest") Cookie cookie) {
+    public String getMain1(@CookieValue(name = "refresh") Cookie cookie) {
         log.info("Cookie: {}", cookie.getValue());
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();

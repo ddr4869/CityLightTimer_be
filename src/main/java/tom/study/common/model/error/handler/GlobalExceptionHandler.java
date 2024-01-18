@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -74,22 +75,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(errorCode);
     }
 
-    private ResponseEntity<Object> handleExceptionInternal(ErrorCode errorCode) {
+    public static ResponseEntity<Object> handleExceptionInternal(ErrorCode errorCode) {
         return ResponseEntity.status(errorCode.getHttpStatus())
                 .body(makeErrorResponse(errorCode));
     }
 
-    private ResponseEntity<Object> handleExceptionInternal(ErrorCode errorCode, String message) {
+    public ResponseEntity<Object> handleExceptionInternal(ErrorCode errorCode, String message) {
         return ResponseEntity.status(errorCode.getHttpStatus())
                 .body(makeErrorResponse(errorCode, message));
     }
 
-    private ResponseEntity<Object> handleExceptionInternal(MethodArgumentNotValidException e, ErrorCode errorCode) {
+    public ResponseEntity<Object> handleExceptionInternal(MethodArgumentNotValidException e, ErrorCode errorCode) {
         return ResponseEntity.status(errorCode.getHttpStatus())
                 .body(makeErrorResponse(e, errorCode));
     }
 
-    private ErrorResponse makeErrorResponse(ErrorCode errorCode) {
+    public static ErrorResponse makeErrorResponse(ErrorCode errorCode) {
         return ErrorResponse.builder()
                 .status(errorCode.getHttpStatus())
                 .code(errorCode.name())
@@ -98,7 +99,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    private ErrorResponse makeErrorResponse(ErrorCode errorCode, String message) {
+    public ErrorResponse makeErrorResponse(ErrorCode errorCode, String message) {
         return ErrorResponse.builder()
                 .status(errorCode.getHttpStatus())
                 .code(errorCode.name())
@@ -107,7 +108,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    private ErrorResponse makeErrorResponse(MethodArgumentNotValidException e, ErrorCode errorCode) {
+    public ErrorResponse makeErrorResponse(MethodArgumentNotValidException e, ErrorCode errorCode) {
         List<ErrorResponse.ValidationError> validationErrorList = e.getBindingResult()
                 .getFieldErrors()
                 .stream()

@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
@@ -21,11 +22,7 @@ public class RequestValidationFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-//        String secretAccessCode = request.getHeader("Secret-Access-Code");
-//        if (secretAccessCode==null || secretAccessCode.isBlank()) {
-//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//            return;
-//        }
+
         log.info(" *** testFilter *** ");
         chain.doFilter(request, response);
     }

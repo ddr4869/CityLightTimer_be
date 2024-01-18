@@ -21,6 +21,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
 
         UserDetails userDetails = userService.loadUserByUsername(username);
+        log.info("UsernamePasswordAuthenticationToken start - username: {}", username);
         return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
     }
 

@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -20,11 +22,15 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.debug.DebugFilter;
+import tom.study.common.config.security.filter.JwtAuthenticationFilter;
 import tom.study.common.config.security.filter.RequestValidationFilter;
+import tom.study.common.config.security.jwt.JwtUtil;
 import tom.study.common.config.security.login.LoginSuccessHandler;
+import tom.study.common.model.error.handler.GlobalExceptionHandler;
 
 import java.io.PrintWriter;
 import java.util.List;
@@ -34,11 +40,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig {
     private final RequestValidationFilter requestValidationFilter;
     private final LoginSuccessHandler loginSuccessHandler;
-
-
+    private final JwtUtil jwtUtil;
+    private final GlobalExceptionHandler globalExceptionHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -50,9 +57,11 @@ public class SecurityConfig {
                         .successHandler(loginSuccessHandler)
                         .permitAll())
 //                .formLogin(withDefaults())
+                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/hello").hasAnyAuthority("ROLE_ADMIN")
                                 .anyRequest().permitAll()
+
                         //.anyRequest().authenticated()
                 );
 //                .exceptionHandling((exceptionConfig) ->
@@ -69,7 +78,7 @@ public class SecurityConfig {
 //                .exceptionHandling((exceptionConfig) ->
 //                        exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler)
 //              ); // 401 403 관련 예외처리
-
+        log.info("http build");
         return http.build();
     }
 
