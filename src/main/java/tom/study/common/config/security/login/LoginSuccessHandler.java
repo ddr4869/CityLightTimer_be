@@ -39,21 +39,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             log.info("set cookie....");
             String accessToken = jwtUtil.createAccessJwt("tom");
             String refreshToken = jwtUtil.createRefreshJwt("tom");
-//            Cookie cookie = new Cookie("refresh","refresh");
-//            cookie.setDomain("localhost");
-//            cookie.setPath("/");
-//            cookie.setMaxAge(30*60);
-//            cookie.setSecure(true);
-//            log.info("Cookie value: {}", cookie.getValue());
-//            log.info("Cookie name: {}", cookie.getName());
-//
-//            PrintWriter writer = response.getWriter();
-//            writer.write(accessToken.toString());
-//            response.addCookie(cookie);
-//            response.setHeader("access", accessToken);
-//            request.setAttribute("access", accessToken);
-//            response.sendRedirect("/hello");
-
 
             Map<String, String> tokenMap = new HashMap<>();
             tokenMap.put("accessToken", accessToken);

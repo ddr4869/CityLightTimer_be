@@ -1,4 +1,4 @@
-package tom.study.logger;
+package tom.study.common.logger;
 
 import lombok.RequiredArgsConstructor;
 

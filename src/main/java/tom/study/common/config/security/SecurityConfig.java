@@ -56,10 +56,11 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .successHandler(loginSuccessHandler)
                         .permitAll())
-//                .formLogin(withDefaults())
+                //.formLogin(withDefaults())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/hello").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers("/hello") //.permitAll()
+                                .hasAnyAuthority("ROLE_ADMIN")
                                 .anyRequest().permitAll()
 
                         //.anyRequest().authenticated()

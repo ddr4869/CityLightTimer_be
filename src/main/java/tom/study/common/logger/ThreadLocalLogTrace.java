@@ -1,9 +1,9 @@
-package tom.study.logger;
+package tom.study.common.logger;
 
 
 import lombok.extern.slf4j.Slf4j;
-import tom.study.logger.model.TraceId;
-import tom.study.logger.model.TraceStatus;
+import tom.study.common.logger.model.TraceId;
+import tom.study.common.logger.model.TraceStatus;
 
 @Slf4j
 public class ThreadLocalLogTrace implements LogTrace {

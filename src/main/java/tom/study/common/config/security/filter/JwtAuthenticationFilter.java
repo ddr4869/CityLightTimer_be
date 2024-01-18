@@ -40,11 +40,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Authentication authentication = jwtUtil.getAuthenticationFromToken(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+            log.info("*** Valid token ***");
             chain.doFilter(request, response);
-
         } catch (ExpiredJwtException e) {
+            log.info("*** Invalid ExpiredJwtException token ***");
             jwtErrResponse(response, CommonErrorCode.EXPIRED_TOKEN);
         }  catch (Exception e) {
+            log.info("*** Invalid Exception token ***");
             jwtErrResponse(response, CommonErrorCode.INVALID_TOKEN);
         }
     }
@@ -52,6 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // Request Header 에서 토큰 정보 추출
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
+        log.info("Header Token : {}", bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
             return bearerToken.substring(7);
         }
@@ -63,6 +66,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         ResponseEntity<Object> errorResponse = GlobalExceptionHandler.handleExceptionInternal(code);
         response.setContentType("application/json");
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse.getBody()));
-
     }
 }

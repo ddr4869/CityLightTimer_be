@@ -1,4 +1,4 @@
-package tom.study.logger.model;
+package tom.study.common.logger.model;
 
 public class TraceStatus {
     private TraceId traceId;

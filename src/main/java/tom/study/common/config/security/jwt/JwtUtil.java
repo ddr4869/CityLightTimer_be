@@ -65,7 +65,6 @@ public class JwtUtil {
     }
 
     public Authentication getAuthenticationFromToken(String token) {
-
         Claims claims = parseClaims(token);
         String username = String.valueOf(claims.get("userName"));
         log.info("username: {}", username);
@@ -74,7 +73,6 @@ public class JwtUtil {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
         Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
-
         CustomUser user = new CustomUser(claims.getIssuer(), claims.getIssuer(), "", "SUPER_ADMIN");
         return new UsernamePasswordAuthenticationToken(user, "", authorities);
     }

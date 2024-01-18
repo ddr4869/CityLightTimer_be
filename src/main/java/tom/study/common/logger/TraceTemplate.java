@@ -1,9 +1,8 @@
-package tom.study.logger;
+package tom.study.common.logger;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import tom.study.logger.model.TraceStatus;
+import tom.study.common.logger.model.TraceStatus;
 
 @RequiredArgsConstructor
 @Configuration

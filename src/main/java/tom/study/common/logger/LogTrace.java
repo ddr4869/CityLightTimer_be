@@ -1,6 +1,6 @@
-package tom.study.logger;
+package tom.study.common.logger;
 
-import tom.study.logger.model.TraceStatus;
+import tom.study.common.logger.model.TraceStatus;
 
 public interface LogTrace {
     TraceStatus begin(String message);
