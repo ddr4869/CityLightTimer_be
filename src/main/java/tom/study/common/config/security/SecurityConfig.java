@@ -26,9 +26,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.debug.DebugFilter;
+import org.springframework.web.cors.CorsConfiguration;
 import tom.study.common.config.security.filter.JwtAuthenticationFilter;
 import tom.study.common.config.security.filter.RequestValidationFilter;
 import tom.study.common.config.security.jwt.JwtUtil;
+import tom.study.common.config.security.login.LoginFailureHandler;
 import tom.study.common.config.security.login.LoginSuccessHandler;
 import tom.study.common.model.error.handler.GlobalExceptionHandler;
 
@@ -44,6 +46,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
     private final RequestValidationFilter requestValidationFilter;
     private final LoginSuccessHandler loginSuccessHandler;
+    private final LoginFailureHandler loginFailureHandler;
     private final JwtUtil jwtUtil;
     private final GlobalExceptionHandler globalExceptionHandler;
 
@@ -52,11 +55,27 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(withDefaults())
+                // 1,2. 로그인 페이지 설정 -> 사용자가 로그인 페이지에 접근, 로그인 정보를 서버에 제출
                 .formLogin(form -> form
                         .loginPage("/login")
+                        // 8 로그인 성공 - AuthenticationSuccessHandler 호출
                         .successHandler(loginSuccessHandler)
+                        // 9 로그인 실패 - AuthenticationFailureHandler 호출
+                        .failureHandler(loginFailureHandler)
                         .permitAll())
                 //.formLogin(withDefaults())
+                .cors(cors -> cors
+                        .configurationSource(request -> {
+                            CorsConfiguration corsConfiguration = new CorsConfiguration();
+                            corsConfiguration.addAllowedOriginPattern("*"); // 모든 ip에 응답을 허용합니다.
+                            corsConfiguration.addAllowedMethod("*");
+                            corsConfiguration.addAllowedHeader("*");
+                            corsConfiguration.setAllowCredentials(true);
+                            corsConfiguration.setMaxAge(3600L);
+                            return corsConfiguration;
+                        }))
+                // 3. UsernamePasswordAuthenticationFilter 전 jwt 인증 filter(JwtAuthenticationFilter)
+                // 4. UsernamePasswordAuthenticationFilter는 로그인 정보를 가로채 AuthenticationManager에게 인증을 요청한다.
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/hello") //.permitAll()

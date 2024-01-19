@@ -22,10 +22,10 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
-    public void loginUser(CustomerLoginRequest customerLoginRequest) {
-        Authentication authToken = new UsernamePasswordAuthenticationToken(
-                customerLoginRequest.getCustomerName(), customerLoginRequest.getCustomerPw());
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-        //customerRepository.save(user);
-    }
+//    public void loginUser(CustomerLoginRequest customerLoginRequest) {
+//        Authentication authToken = new UsernamePasswordAuthenticationToken(
+//                customerLoginRequest.getCustomerName(), customerLoginRequest.getCustomerPw());
+//        SecurityContextHolder.getContext().setAuthentication(authToken);
+    //customerRepository.save(user);
+//  }
 }

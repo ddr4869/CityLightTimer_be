@@ -34,6 +34,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
     @Override
+    // 8 Authentication객체 성공적으로 반환 시 호출
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         try {
             log.info("set cookie....");
@@ -49,6 +50,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.getWriter().write(jsonResponse);
 
+            response.sendRedirect("hello");
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new RuntimeException(e);
         }

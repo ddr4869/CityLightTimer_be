@@ -34,11 +34,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 
         log.info("*** JwtAuthenticationFilter ***");
+        log.info("*** content-type: *** : {}", request.getContentType());
+        String name = request.getParameter("username");
+        log.info("Param name : {}", name);
         try {
             String token = resolveToken(request);
             if (token != null && jwtUtil.validateToken(token)) {
                 Authentication authentication = jwtUtil.getAuthenticationFromToken(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                //SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             log.info("*** Valid token ***");
             chain.doFilter(request, response);
@@ -54,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // Request Header 에서 토큰 정보 추출
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        log.info("Header Token : {}", bearerToken);
+        log.info("bearerToken : {}", bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
             return bearerToken.substring(7);
         }
