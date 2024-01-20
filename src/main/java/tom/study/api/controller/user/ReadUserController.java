@@ -18,4 +18,9 @@ public class ReadUserController {
         model.addAttribute("data", "test");
         return "basic";
     }
+
+    @GetMapping("/map")
+    public String map() {
+        return "map";
+    }
 }

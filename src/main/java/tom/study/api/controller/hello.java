@@ -50,4 +50,9 @@ public class hello {
         return "안녕하세요, " + authentication.getName() + "님!<br>" +
                 "귀하의 비밀번호는 " + password;
     }
+
+    @GetMapping("test")
+    public String test(HttpServletResponse response) {
+        return "test";
+    }
 }
