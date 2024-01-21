@@ -1,9 +1,9 @@
-package tom.study.api.controller.Light;
+package tom.study.common.feign.resp;
 
 import lombok.Getter;
 
 @Getter
-public class LightResponse {
+public class LightFeignResponse {
 
     String dataId;
     String trsmDy;
