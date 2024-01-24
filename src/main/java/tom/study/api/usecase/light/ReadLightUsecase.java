@@ -2,7 +2,7 @@ package tom.study.api.usecase.light;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import tom.study.api.controller.Light.model.LightRequest;
+import tom.study.api.controller.light.model.LightRequest;
 import tom.study.common.feign.resp.LightFeignResponse;
 import tom.study.domain.light.service.LightService;
 
