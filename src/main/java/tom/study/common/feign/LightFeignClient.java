@@ -12,4 +12,7 @@ import java.util.List;
 public interface LightFeignClient {
     @RequestMapping(method = RequestMethod.GET)
     public List<LightFeignResponse> LightTimingInformation(@RequestParam("apiKey") String apiKey, @RequestParam("itstId") String itstId, @RequestParam("pageNo") String pageNo, @RequestParam("numOfRows") String numOfRows);
+
+    @RequestMapping(method = RequestMethod.GET)
+    public List<LightFeignResponse> LightTimingSimpleInformation(@RequestParam("apiKey") String apiKey, @RequestParam("itstId") String itstId, @RequestParam("pageNo") String pageNo, @RequestParam("numOfRows") String numOfRows);
 }

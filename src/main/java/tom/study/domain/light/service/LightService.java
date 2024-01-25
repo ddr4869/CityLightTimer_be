@@ -1,5 +1,6 @@
 package tom.study.domain.light.service;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +20,12 @@ public class LightService {
 
     private final LightFeignClient lightFeignClient;
 
-    public List<LightFeignResponse> LightTimingInformation(LightRequest lightRequest) {
-        return lightFeignClient.LightTimingInformation(apiKey, lightRequest.getItstId(), lightRequest.getPageNo(), lightRequest.getNumOfRows());
+    public List<LightFeignResponse> LightTimingInformation(LightRequest lightRequest) throws FeignException {
+        try {
+            return lightFeignClient.LightTimingInformation(apiKey, lightRequest.getItstId(), lightRequest.getPageNo(), lightRequest.getNumOfRows());
+        } catch (FeignException e) {
+            log.info("!!! FeignException !!!");
+            throw e;
+        }
     }
 }

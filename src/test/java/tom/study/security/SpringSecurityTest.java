@@ -76,16 +76,6 @@ public class SpringSecurityTest {
     }
 
     @Test
-    public void GetUser2() {
-        UserDetails userA = org.springframework.security.core.userdetails.User
-                .withUsername("jinseok")
-                .password("1234")
-                .authorities("WRITE", "READ", "UPDATE")
-                .roles("qwe")
-                .build();
-    }
-
-    @Test
     public void securityTest1() {
         UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername("richard");
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();

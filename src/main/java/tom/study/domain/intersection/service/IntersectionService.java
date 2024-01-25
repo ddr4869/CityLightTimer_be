@@ -33,29 +33,7 @@ public class IntersectionService {
     public List<IntersectionSimpleResponse> intersectionSimpleInformation() throws IOException {
         List<IntersectionSimpleResponse> intersections = intersectionFeignClient.intersectionSimpleList(apiKey, "1");
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(new File("/Users/ieungyu/go/src/github.com/ddr4869/mySpringBoard/intersection3.json"), intersections);
+        objectMapper.writeValue(new File("/Users/ieungyu/go/src/github.com/ddr4869/CityLightTimer_be/intersection3.json"), intersections);
         return intersections;
-    }
-
-    public void intersectionSimpleInformationIfLightTimingExist() throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<IntersectionSimpleResponse> intersections = objectMapper.readValue(new File("/Users/ieungyu/go/src/github.com/ddr4869/mySpringBoard/intersection1.json"), new TypeReference<List<IntersectionSimpleResponse>>() {});
-        int cnt = 0;
-        for (IntersectionSimpleResponse intersectionSimpleResponse: intersections) {
-            if (cnt==10) break;
-            log.info("feign starting ...");
-            List<LightFeignResponse> light = lightFeignClient.LightTimingInformation(apiKey, intersectionSimpleResponse.getItstId(), "1", "1");
-            if (!light.isEmpty()) {
-                log.info("resp: {}", light.get(0).getItstId());
-            }
-            cnt+=1;
-        }
-    }
-
-    public void intersectionSimpleInformationIfLightTimingExist2() throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        //List<IntersectionSimpleResponse> intersections = objectMapper.readValue(new File("/Users/ieungyu/go/src/github.com/ddr4869/mySpringBoard/intersection1.json"), new TypeReference<List<IntersectionSimpleResponse>>() {});
-            List<LightFeignResponse> light = lightFeignClient.LightTimingInformation(apiKey, "22904", "1", "1");
-                log.info("resp: {}", light.get(0).toString());
     }
 }

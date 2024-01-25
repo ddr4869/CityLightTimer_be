@@ -22,8 +22,6 @@ public class RequestValidationFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-
-        log.info(" *** testFilter *** ");
         chain.doFilter(request, response);
     }
 
