@@ -16,8 +16,8 @@ public class ResponseConfig {
         log.info("restTimeout set ... ");
 
         return restTemplateBuilder.
-                setConnectTimeout(Duration.ofSeconds(5)).
-                setReadTimeout(Duration.ofSeconds(5)).
+                setConnectTimeout(Duration.ofSeconds(3)).
+                setReadTimeout(Duration.ofSeconds(3)).
                 build();
     }
 }
