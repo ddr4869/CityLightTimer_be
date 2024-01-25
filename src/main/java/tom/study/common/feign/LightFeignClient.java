@@ -4,6 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import tom.study.common.feign.resp.LightFeignMetaResponse;
 import tom.study.common.feign.resp.LightFeignResponse;
 
 import java.util.List;
@@ -14,5 +15,5 @@ public interface LightFeignClient {
     public List<LightFeignResponse> LightTimingInformation(@RequestParam("apiKey") String apiKey, @RequestParam("itstId") String itstId, @RequestParam("pageNo") String pageNo, @RequestParam("numOfRows") String numOfRows);
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<LightFeignResponse> LightTimingSimpleInformation(@RequestParam("apiKey") String apiKey, @RequestParam("itstId") String itstId, @RequestParam("pageNo") String pageNo, @RequestParam("numOfRows") String numOfRows);
+    public List<LightFeignMetaResponse> LightTimingMetaInformation(@RequestParam("apiKey") String apiKey, @RequestParam("itstId") String itstId, @RequestParam("pageNo") String pageNo, @RequestParam("numOfRows") String numOfRows);
 }
