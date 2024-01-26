@@ -37,9 +37,13 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     // 8 Authentication객체 성공적으로 반환 시 호출
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         try {
-            log.info("set cookie....");
-            String accessToken = jwtUtil.createAccessJwt("tom");
-            String refreshToken = jwtUtil.createRefreshJwt("tom");
+            log.info("Authentication name : {}",authentication.getName());
+
+            String accessToken = jwtUtil.createAccessJwt(authentication.getName());
+            String refreshToken = jwtUtil.createRefreshJwt(authentication.getName());
+
+
+
 
             Map<String, String> tokenMap = new HashMap<>();
             tokenMap.put("accessToken", accessToken);
@@ -50,7 +54,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.getWriter().write(jsonResponse);
 
-            //response.sendRedirect("hello");
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new RuntimeException(e);
         }

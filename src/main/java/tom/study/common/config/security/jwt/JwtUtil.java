@@ -65,7 +65,7 @@ public class JwtUtil {
     }
 
     public Authentication getAuthenticationFromToken(String token) {
-        Claims claims = parseClaims(token);
+        Claims claims = getPayload(token);
         String username = String.valueOf(claims.get("userName"));
         log.info("username: {}", username);
         //String username = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getSubject();
@@ -96,7 +96,7 @@ public class JwtUtil {
             throw new IllegalArgumentException();
         }
     }
-    private Claims parseClaims(String token) {
+    public Claims getPayload(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
             return claims.getPayload();

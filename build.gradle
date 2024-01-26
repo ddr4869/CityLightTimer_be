@@ -38,6 +38,8 @@ dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0")
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
+	//Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	//Querydsl 추가
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
