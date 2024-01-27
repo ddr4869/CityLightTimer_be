@@ -7,21 +7,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
-import org.apache.el.parser.TokenMgrError;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
 import tom.study.common.config.security.jwt.JwtUtil;
-import tom.study.common.model.error.errorCode.CommonErrorCode;
-import tom.study.common.model.error.handler.GlobalExceptionHandler;
-import tom.study.common.model.error.response.ErrorResponse;
-import tom.study.common.model.error.errorCode.ErrorCode;
+import tom.study.common.response.error.errorCode.CommonErrorCode;
+import tom.study.common.response.error.handler.GlobalExceptionHandler;
 
 import java.io.IOException;
 

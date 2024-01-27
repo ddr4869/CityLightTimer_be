@@ -1,41 +1,30 @@
 package tom.study.common.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.FilterChain;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.debug.DebugFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import tom.study.common.config.security.filter.JwtAuthenticationFilter;
 import tom.study.common.config.security.filter.RequestValidationFilter;
 import tom.study.common.config.security.jwt.JwtUtil;
+import tom.study.common.config.security.login.CustomAuthenticationEntryPoint;
 import tom.study.common.config.security.login.LoginFailureHandler;
 import tom.study.common.config.security.login.LoginSuccessHandler;
-import tom.study.common.model.error.handler.GlobalExceptionHandler;
+import tom.study.common.response.error.handler.GlobalExceptionHandler;
 
 import java.io.PrintWriter;
-import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -47,6 +36,7 @@ public class SecurityConfig {
     private final RequestValidationFilter requestValidationFilter;
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final JwtUtil jwtUtil;
     private final GlobalExceptionHandler globalExceptionHandler;
 
@@ -83,10 +73,10 @@ public class SecurityConfig {
                                 .anyRequest().permitAll()
 
                         //.anyRequest().authenticated()
-                );
+                )
+                .exceptionHandling( exceptionConfig -> exceptionConfig.authenticationEntryPoint(customAuthenticationEntryPoint));
 //                .exceptionHandling((exceptionConfig) ->
 //                        exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler));
-
 //        http    .csrf(AbstractHttpConfigurer::disable)
 //                .formLogin(withDefaults())
 //                .addFilterBefore(requestValidationFilter, BasicAuthenticationFilter.class)

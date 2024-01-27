@@ -1,4 +1,4 @@
-package tom.study.common.model.error.errorCode;
+package tom.study.common.response.error.errorCode;
 
 import org.springframework.http.HttpStatus;
 

@@ -40,12 +40,12 @@ public class WriteUserController {
         String token = jwtUtil.resolveToken(header);
         Map<String, Object> payloads = jwtRedis.getJwtHash(token);
         if (payloads.isEmpty()) {
-            throw new JwtException("Exipred or invalid token");
+            log.info("!!! expired !!!");
         }
         //jwtRedis.delKey(token);
 
         RefreshResponse response= new RefreshResponse();
-        response.accessToken = jwtUtil.createAccessJwt((String) payloads.get("userName"));
+        response.access_token = jwtUtil.createAccessJwt((String) payloads.get("userName"));
         response.issuer = (String) payloads.get("userName");
         response.issuedAt = (Date) payloads.get("issuedAt");
         response.expired = (Date) payloads.get("expired");

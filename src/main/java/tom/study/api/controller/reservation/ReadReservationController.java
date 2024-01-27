@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tom.study.api.controller.reservation.model.ReservationQueryAllRequest;
 import tom.study.api.controller.reservation.model.ReservationQueryRequest;
 import tom.study.api.usecase.reservation.ReadReservationUsecase;
+import tom.study.common.response.ApiResponse;
 import tom.study.domain.reservation.model.entity.Reservation;
 
 import java.util.List;
@@ -21,15 +22,15 @@ import java.util.Optional;
 public class ReadReservationController {
     private final ReadReservationUsecase readReservationUsecase;
     @GetMapping("/view/lists")
-    public List<Reservation> getAllReservations() {
+    public ApiResponse<Object> getAllReservations() {
         ReservationQueryAllRequest reservationQueryAllRequest = new ReservationQueryAllRequest();
-        return readReservationUsecase.execute(reservationQueryAllRequest);
+        return ApiResponse.ApiResponseSuccess(readReservationUsecase.execute(reservationQueryAllRequest));
     }
 
     @GetMapping("/view/{id}")
-    public Reservation getReservation(@PathVariable("id") Long id) {
+    public ApiResponse<Object> getReservation(@PathVariable("id") Long id) {
         ReservationQueryRequest reservationQueryRequest = new ReservationQueryRequest();
         reservationQueryRequest.setId(id);
-        return readReservationUsecase.execute(reservationQueryRequest);
+        return ApiResponse.ApiResponseSuccess(readReservationUsecase.execute(reservationQueryRequest));
     }
 }

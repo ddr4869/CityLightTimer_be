@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tom.study.api.controller.light.model.LightRequest;
 import tom.study.common.feign.resp.IntersectionResponse;
 import tom.study.common.feign.resp.IntersectionSimpleResponse;
+import tom.study.common.response.ApiResponse;
 import tom.study.domain.intersection.service.IntersectionService;
 
 import java.io.IOException;
@@ -18,18 +19,18 @@ import java.util.List;
 public class IntersectionController {
     private final IntersectionService intersectionService;
     @GetMapping("/list")
-    public List<IntersectionResponse> getIntersectionList() {
-        return intersectionService.intersectionInformation();
+    public ApiResponse<Object> getIntersectionList() {
+        return ApiResponse.ApiResponseSuccess(intersectionService.intersectionInformation());
     }
 
     @GetMapping("/list/simple")
-    public List<IntersectionSimpleResponse> getIntersectionSimpleList() throws IOException {
-        return intersectionService.intersectionSimpleInformation();
+    public ApiResponse<Object> getIntersectionSimpleList() throws IOException {
+        return ApiResponse.ApiResponseSuccess(intersectionService.intersectionSimpleInformation());
     }
 
     //TODO
     @GetMapping("/list/neighbor")
-    public List<IntersectionSimpleResponse> getNeighborIntersectionSimple(LightRequest lightRequest) throws IOException {
-        return intersectionService.intersectionSimpleInformation();
+    public ApiResponse<Object> getNeighborIntersectionSimple(LightRequest lightRequest) throws IOException {
+        return ApiResponse.ApiResponseSuccess(intersectionService.intersectionSimpleInformation());
     }
 }

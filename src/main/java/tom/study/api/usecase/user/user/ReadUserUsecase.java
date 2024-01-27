@@ -14,7 +14,4 @@ public class ReadUserUsecase {
 
     private final CustomerService customerService;
 
-    public void execute(CustomerCreateRequest customerCreateRequest) {
-        customerService.createUser(customerCreateRequest.ModelToEntity(customerCreateRequest));
-    }
 }

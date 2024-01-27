@@ -1,4 +1,4 @@
-package tom.study.common.model.error.errorCode;
+package tom.study.common.response.error.errorCode;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

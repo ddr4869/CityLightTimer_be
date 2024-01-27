@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tom.study.api.controller.reservation.model.ReservationCreateRequest;
 import tom.study.api.usecase.reservation.WriteReservationUsecase;
+import tom.study.common.response.ApiResponse;
 import tom.study.domain.reservation.model.entity.Reservation;
 
 @RestController
@@ -18,8 +19,7 @@ public class WriteReservationController {
     private final WriteReservationUsecase writeReservationUsecase;
 
     @PostMapping("/create")
-    public Reservation createReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
-        log.info("createReservation");
-        return writeReservationUsecase.execute(reservationCreateRequest);
+    public ApiResponse<Object> createReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
+        return ApiResponse.ApiResponseSuccess(writeReservationUsecase.execute(reservationCreateRequest));
     }
 }

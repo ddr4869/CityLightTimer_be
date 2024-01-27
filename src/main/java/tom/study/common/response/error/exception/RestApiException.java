@@ -1,8 +1,8 @@
-package tom.study.common.model.error.exception;
+package tom.study.common.response.error.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import tom.study.common.model.error.errorCode.ErrorCode;
+import tom.study.common.response.error.errorCode.ErrorCode;
 
 @Getter
 @RequiredArgsConstructor

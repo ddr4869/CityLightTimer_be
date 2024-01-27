@@ -8,24 +8,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import tom.study.common.response.ApiResponse;
 
 import java.io.IOException;
 
-
 @Slf4j
 @RequiredArgsConstructor
 @Component
-// 9 Authentication 객체 에러 발생 시 호출
-public class LoginFailureHandler implements AuthenticationFailureHandler {
+public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         log.info("![Login Fail] - LoginFailureHandler");
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonResponse = objectMapper.writeValueAsString(
-                ApiResponse.ApiResponseUnauthorized("Please check ID or PW")
+                ApiResponse.ApiResponseUnauthorized("You do not have access")
         );
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(String.valueOf(jsonResponse));

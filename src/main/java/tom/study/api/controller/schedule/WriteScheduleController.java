@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tom.study.api.controller.schedule.model.ScheduleCreateRequest;
 import tom.study.api.usecase.schedule.WriteScheduleUsecase;
+import tom.study.common.response.ApiResponse;
 import tom.study.domain.schedule.model.entity.Schedule;
 
 @RestController
@@ -19,7 +20,7 @@ public class WriteScheduleController {
     private final WriteScheduleUsecase writeScheduleUsecase;
 
     @PostMapping("/create")
-    public Schedule createSchedule(@RequestBody @Valid ScheduleCreateRequest scheduleCreateRequest) {
-        return writeScheduleUsecase.execute(scheduleCreateRequest);
+    public ApiResponse<Object> createSchedule(@RequestBody @Valid ScheduleCreateRequest scheduleCreateRequest) {
+        return ApiResponse.ApiResponseSuccess(writeScheduleUsecase.execute(scheduleCreateRequest));
     }
 }

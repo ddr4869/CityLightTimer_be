@@ -19,13 +19,20 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 import tom.study.common.config.security.jwt.JwtUtil;
 import tom.study.common.config.security.jwt.redis.JwtRedis;
+import tom.study.common.config.security.login.model.LoginSuccessResponse;
+import tom.study.common.response.ApiResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -46,14 +53,25 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
             jwtRedis.insertRefreshToken(refreshToken);
 
-            Map<String, String> tokenMap = new HashMap<>();
-            tokenMap.put("accessToken", accessToken);
-            tokenMap.put("refreshToken", refreshToken);
+
+            LoginSuccessResponse loginSuccessResponse = new LoginSuccessResponse();
+            loginSuccessResponse.access_token = accessToken;
+            loginSuccessResponse.refresh_token = refreshToken;
+            loginSuccessResponse.access_token_expired = new Date(System.currentTimeMillis()+jwtUtil.accessExpired);
+            loginSuccessResponse.refresh_token_expired = new Date(System.currentTimeMillis()+jwtUtil.refreshExpired);
 
             ObjectMapper objectMapper = new ObjectMapper();
-            String jsonResponse = objectMapper.writeValueAsString(tokenMap);
+            String jsonResponse = objectMapper.writeValueAsString(
+                    ApiResponse.
+                            builder().
+                            status(200).
+                            code("SUCCESS").
+                            message("OK").
+                            data(loginSuccessResponse).
+                            build()
+            );
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.getWriter().write(jsonResponse);
+            response.getWriter().write(String.valueOf(jsonResponse));
 
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new RuntimeException(e);

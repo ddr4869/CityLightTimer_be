@@ -17,9 +17,8 @@ import tom.study.domain.customer.repository.CustomerRepository;
 public class CustomerService {
     private final CustomerRepository customerRepository;
 
-    public void createUser(Customer customer) {
-        log.info("Create {}", customer.getCustomerName());
-        customerRepository.save(customer);
+    public Customer createUser(Customer customer) {
+        return customerRepository.save(customer);
     }
 
 //    public void loginUser(CustomerLoginRequest customerLoginRequest) {

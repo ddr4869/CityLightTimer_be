@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 public class RefreshResponse {
     @NotNull
-    public String accessToken;
+    public String access_token;
     @NotNull
     public String issuer;
     @NotNull

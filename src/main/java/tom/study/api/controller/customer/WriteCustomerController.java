@@ -2,12 +2,14 @@ package tom.study.api.controller.customer;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tom.study.api.controller.customer.model.CustomerCreateRequest;
 import tom.study.api.usecase.customer.WriteCustomerUsecase;
+import tom.study.common.response.ApiResponse;
 
 @RestController
 @RequestMapping("/api/customer")
@@ -16,8 +18,7 @@ public class WriteCustomerController {
     private final WriteCustomerUsecase writeCustomerUsercase;
 
     @PostMapping("/create")
-    public void createCustomer(@RequestBody @Valid CustomerCreateRequest customerCreateRequest) {
-        writeCustomerUsercase.execute(customerCreateRequest);
+    public ApiResponse<Object> createCustomer(@RequestBody @Valid CustomerCreateRequest customerCreateRequest) {
+        return ApiResponse.ApiResponseSuccess(writeCustomerUsercase.execute(customerCreateRequest));
     }
-
 }
