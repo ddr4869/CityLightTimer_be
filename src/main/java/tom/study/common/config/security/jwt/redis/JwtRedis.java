@@ -1,16 +1,19 @@
 package tom.study.common.config.security.jwt.redis;
 
+import io.jsonwebtoken.Claims;
 import io.lettuce.core.api.sync.RedisSetCommands;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tom.study.common.config.security.jwt.JwtUtil;
 
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -18,6 +21,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class JwtRedis {
     private final RedisTemplate<String, Object> redisTemplate;
+    private final JwtUtil jwtUtil;
 
     public void setValues(String key, String data) {
         ValueOperations<String, Object> values = redisTemplate.opsForValue();
@@ -33,13 +37,37 @@ public class JwtRedis {
         return (String) values.get(key);
     }
 
-    public void setJwtSets(String key, String data) {
+    public void setJwtSet(String key, List<Object> datas) {
         SetOperations<String, Object> sets = redisTemplate.opsForSet();
-        sets.add(key, data);
+        for (Object data: datas) {
+            sets.add(key, data);
+        }
     }
-
-    public Set<Object> getJwtSets(String key) {
+    public Set<Object> getJwtSet(String key) {
         SetOperations<String, Object> sets = redisTemplate.opsForSet();
         return sets.members(key);
+    }
+
+    public void setJwtHash(String key, HashMap<String, Object> hashData) {
+        HashOperations<String, String, Object> hash = redisTemplate.opsForHash();
+        hash.putAll(key, hashData);
+    }
+    public Map<String, Object> getJwtHash(String key) {
+        HashOperations<String, String, Object> hash = redisTemplate.opsForHash();
+        return hash.entries(key);
+    }
+
+
+    public void insertRefreshToken(String token) {
+        HashMap<String, Object> payloads = new HashMap<>();
+        Claims claims = jwtUtil.getPayload(token);
+        payloads.put("userName", String.valueOf(claims.get("userName")));
+        payloads.put("issuedAt",claims.getIssuedAt());
+        payloads.put("expired", claims.getExpiration());
+        setJwtHash(token, payloads);
+    }
+
+    public void delKey(String key) {
+        redisTemplate.delete(key);
     }
 }

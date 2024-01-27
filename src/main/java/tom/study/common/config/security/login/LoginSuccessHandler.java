@@ -18,6 +18,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 import tom.study.common.config.security.jwt.JwtUtil;
+import tom.study.common.config.security.jwt.redis.JwtRedis;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -33,6 +34,7 @@ import java.util.Map;
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
+    private final JwtRedis jwtRedis;
     @Override
     // 8 Authentication객체 성공적으로 반환 시 호출
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -42,8 +44,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             String accessToken = jwtUtil.createAccessJwt(authentication.getName());
             String refreshToken = jwtUtil.createRefreshJwt(authentication.getName());
 
-
-
+            jwtRedis.insertRefreshToken(refreshToken);
 
             Map<String, String> tokenMap = new HashMap<>();
             tokenMap.put("accessToken", accessToken);

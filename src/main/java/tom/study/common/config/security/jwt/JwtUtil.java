@@ -14,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import tom.study.common.config.security.CustomUser;
 
 import javax.crypto.SecretKey;
@@ -64,11 +65,18 @@ public class JwtUtil {
                 .compact();
     }
 
+    // Request Header 에서 토큰 정보 추출
+    public String resolveToken(String bearerToken) {
+        log.info("bearerToken : {}", bearerToken);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
     public Authentication getAuthenticationFromToken(String token) {
         Claims claims = getPayload(token);
         String username = String.valueOf(claims.get("userName"));
-        log.info("username: {}", username);
-        //String username = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getSubject();
         if (username == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }

@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String name = request.getParameter("username");
         log.info("Param name : {}", name);
         try {
-            String token = resolveToken(request);
+            String token = jwtUtil.resolveToken(request.getHeader("Authorization"));
             if (token != null && jwtUtil.validateToken(token)) {
                 Authentication authentication = jwtUtil.getAuthenticationFromToken(token);
                 //SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -52,16 +52,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.info("*** Invalid Exception token ***");
             jwtErrResponse(response, CommonErrorCode.INVALID_TOKEN);
         }
-    }
-
-    // Request Header 에서 토큰 정보 추출
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        log.info("bearerToken : {}", bearerToken);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
-            return bearerToken.substring(7);
-        }
-        return null;
     }
 
     private void jwtErrResponse(HttpServletResponse response, CommonErrorCode code) throws IOException{
