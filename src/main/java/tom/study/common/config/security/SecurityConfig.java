@@ -16,7 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import tom.study.common.config.security.filter.JwtAuthenticationFilter;
 import tom.study.common.config.security.filter.RequestValidationFilter;
 import tom.study.common.config.security.jwt.JwtUtil;
 import tom.study.common.config.security.login.CustomAuthenticationEntryPoint;
@@ -66,12 +68,11 @@ public class SecurityConfig {
                         }))
                 // 3. UsernamePasswordAuthenticationFilter 전 jwt 인증 filter(JwtAuthenticationFilter)
                 // 4. UsernamePasswordAuthenticationFilter는 로그인 정보를 가로채 AuthenticationManager에게 인증을 요청한다.
-                //.addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/hello") //.permitAll()
                                 .hasAnyAuthority("ROLE_ADMIN")
                                 .anyRequest().permitAll()
-
                         //.anyRequest().authenticated()
                 )
                 .exceptionHandling( exceptionConfig -> exceptionConfig.authenticationEntryPoint(customAuthenticationEntryPoint));

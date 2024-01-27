@@ -5,6 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,9 +28,14 @@ public class hello {
 
     private final JwtUtil jwtUtil;
 
+//    @GetMapping("hello")
+//    public ApiResponse<Object> hello(HttpServletResponse response) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
+//        return ApiResponse.ApiResponseSuccess("hello");
+//    }
+
     @GetMapping("hello")
-    public ApiResponse<Object> hello(HttpServletResponse response) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
-        return ApiResponse.ApiResponseSuccess("hello");
+    public ResponseEntity<Object> hello(HttpServletResponse response) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
+        return ResponseEntity.status(200).body(ApiResponse.ApiResponseSuccess("hello"));
     }
 
     @GetMapping("test")

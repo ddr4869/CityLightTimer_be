@@ -30,7 +30,7 @@ spring:
 
 jwt:
   expired:
-    access: '10000000'
+    access: '1000000'
     refresh: '10000000'
   secret: SECRETKEYTEST1234567890TEST!@#$%^&
 map:

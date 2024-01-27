@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import tom.study.common.response.ApiResponse;
 import tom.study.common.response.error.errorCode.CommonErrorCode;
 import tom.study.common.response.error.errorCode.ErrorCode;
 import tom.study.common.response.error.exception.RestApiException;
@@ -37,10 +38,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        log.warn("MethodArgumentNotValidException", ex);
+    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        log.warn("MethodArgumentTypeMismatchException", e);
+        List<String> errors = e.getBindingResult().getFieldErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
+        for (String str : errors) {
+            log.info("{}",str);
+        }
+
         ErrorCode errorCode = CommonErrorCode.BAD_REQUEST;
-        return handleExceptionInternal(errorCode, ex.getMessage());
+        return handleExceptionInternal(e, errorCode);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -50,15 +58,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(errorCode);
     }
 
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException e) {
         log.warn("handleIllegalArgument", e);
         ErrorCode errorCode = CommonErrorCode.INVALID_PARAMETER;
         return handleExceptionInternal(errorCode, e.getMessage());
     }
-
-
-
 
     // 나머지 Exception 처리
     @ExceptionHandler({Exception.class})
@@ -83,36 +89,34 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(makeErrorResponse(e, errorCode));
     }
 
-    public static ErrorResponse makeErrorResponse(ErrorCode errorCode) {
-        return ErrorResponse.builder()
+    public static ApiResponse<Object> makeErrorResponse(ErrorCode errorCode) {
+        return ApiResponse.builder()
                 .status(errorCode.getHttpStatus().value())
                 .code(errorCode.name())
                 .message(errorCode.getMessage())
                 .build();
     }
 
-
-    public ErrorResponse makeErrorResponse(ErrorCode errorCode, String message) {
-        return ErrorResponse.builder()
-                .status(errorCode.getHttpStatus().value())
-                .code(errorCode.name())
-                .message(message)
-                .build();
-    }
-
-
-    public ErrorResponse makeErrorResponse(MethodArgumentNotValidException e, ErrorCode errorCode) {
-        List<ErrorResponse.ValidationError> validationErrorList = e.getBindingResult()
+    public ApiResponse<Object> makeErrorResponse(MethodArgumentNotValidException e, ErrorCode errorCode) {
+        List<ApiResponse.ValidationError> validationErrorList = e.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(ErrorResponse.ValidationError::of)
+                .map(ApiResponse.ValidationError::of)
                 .collect(Collectors.toList());
 
-        return ErrorResponse.builder()
+        return ApiResponse.builder()
                 .status(errorCode.getHttpStatus().value())
                 .code(errorCode.name())
                 .message(errorCode.getMessage())
                 .errors(validationErrorList)
+                .build();
+    }
+
+    public ApiResponse<Object> makeErrorResponse(ErrorCode errorCode, String message) {
+        return ApiResponse.builder()
+                .status(errorCode.getHttpStatus().value())
+                .code(errorCode.name())
+                .message(message)
                 .build();
     }
 }

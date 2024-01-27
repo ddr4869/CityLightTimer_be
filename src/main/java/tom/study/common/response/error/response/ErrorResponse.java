@@ -18,7 +18,7 @@ public class ErrorResponse {
     private final String code;
     private final String message;
 
-    // Errors가 없다면 응답이 내려가지 않게 처리
+    //Errors가 없다면 응답이 내려가지 않게 처리
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private final List<ValidationError> errors;
 
