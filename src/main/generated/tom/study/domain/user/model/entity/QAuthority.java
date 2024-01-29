@@ -22,7 +22,7 @@ public class QAuthority extends EntityPathBase<Authority> {
 
     public static final QAuthority authority = new QAuthority("authority");
 
-    public final NumberPath<Integer> id = createNumber("id", Integer.class);
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath name = createString("name");
 

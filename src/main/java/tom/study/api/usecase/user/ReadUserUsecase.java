@@ -1,4 +1,4 @@
-package tom.study.api.usecase.user.user;
+package tom.study.api.usecase.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -28,7 +28,7 @@ public class IntersectionController {
         return ApiResponse.ApiResponseSuccess(intersectionService.intersectionSimpleInformation());
     }
 
-    //TODO
+    // TODO
     @GetMapping("/list/neighbor")
     public ApiResponse<Object> getNeighborIntersectionSimple(LightRequest lightRequest) throws IOException {
         return ApiResponse.ApiResponseSuccess(intersectionService.intersectionSimpleInformation());

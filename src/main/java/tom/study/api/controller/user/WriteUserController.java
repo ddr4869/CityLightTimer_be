@@ -6,13 +6,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nonapi.io.github.classgraph.json.JSONUtils;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tom.study.api.controller.schedule.model.ScheduleCreateRequest;
+import tom.study.api.controller.user.model.CreateFavoriteRequest;
 import tom.study.api.controller.user.model.LoginUserRequest;
 import tom.study.api.controller.user.model.RefreshResponse;
+import tom.study.api.usecase.user.WriteUserUsecase;
 import tom.study.common.config.security.jwt.JwtUtil;
 import tom.study.common.config.security.jwt.redis.JwtRedis;
 import tom.study.common.response.ApiResponse;
@@ -24,11 +23,13 @@ import java.util.Map;
 import java.util.Set;
 
 @RestController
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 @Slf4j
 public class WriteUserController {
     private final JwtUtil jwtUtil;
     private final JwtRedis jwtRedis;
+    private final WriteUserUsecase writeUserUsecase;
 
     @PostMapping("/login")
     public String login(@RequestBody @Valid LoginUserRequest loginUserRequest) {
@@ -42,6 +43,7 @@ public class WriteUserController {
         String token = jwtUtil.resolveToken(header);
         Map<String, Object> payloads = jwtRedis.getJwtHash(token);
         if (payloads.isEmpty()) {
+            // TODO
             log.info("!!! expired !!!");
         }
         //jwtRedis.delKey(token);
@@ -52,5 +54,12 @@ public class WriteUserController {
         response.expired = (Date) payloads.get("expired");
         log.info("access: {}", response);
         return ApiResponse.ResponseEntitySuccess(response);
+    }
+
+    @PostMapping("/favorites/{itstId}")
+    public ApiResponse<Object> addUserFavorites(@PathVariable("itstId") String itstId) {
+        CreateFavoriteRequest favoriteRequest = new CreateFavoriteRequest();
+        favoriteRequest.itstId=itstId;
+        return ApiResponse.ApiResponseSuccess(writeUserUsecase.execute(favoriteRequest));
     }
 }
