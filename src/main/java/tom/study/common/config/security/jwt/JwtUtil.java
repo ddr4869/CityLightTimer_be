@@ -77,12 +77,14 @@ public class JwtUtil {
         if (username == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
-        Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
-        CustomUser user = new CustomUser(claims.getIssuer(), claims.getIssuer(), "", "SUPER_ADMIN");
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        CustomUser user = new CustomUser((String) claims.get("userName"), (String) claims.get("userName"), "", "ROLE_ADMIN");
         return new UsernamePasswordAuthenticationToken(user, "", authorities);
     }
 
     public boolean validateToken(String token) {
+        Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
         try {
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
             return true;

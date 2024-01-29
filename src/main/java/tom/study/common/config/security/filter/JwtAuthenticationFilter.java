@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import tom.study.common.config.security.jwt.JwtUtil;
 import tom.study.common.response.error.errorCode.CommonErrorCode;
@@ -25,24 +26,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 
         log.info("*** JwtAuthenticationFilter ***");
-        log.info("*** content-type: *** : {}", request.getContentType());
-        String name = request.getParameter("username");
-        log.info("Param name : {}", name);
         try {
             String token = jwtUtil.resolveToken(request.getHeader("Authorization"));
             if (token != null && jwtUtil.validateToken(token)) {
                 Authentication authentication = jwtUtil.getAuthenticationFromToken(token);
-                //SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-            log.info("*** Valid token ***");
-            chain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
             log.info("*** Invalid ExpiredJwtException token ***");
             jwtErrResponse(response, CommonErrorCode.EXPIRED_TOKEN);
+            return ;
         }  catch (Exception e) {
             log.info("*** Invalid Exception token ***");
             jwtErrResponse(response, CommonErrorCode.INVALID_TOKEN);
+            return ;
         }
+        chain.doFilter(request, response);
     }
 
     private void jwtErrResponse(HttpServletResponse response, CommonErrorCode code) throws IOException{

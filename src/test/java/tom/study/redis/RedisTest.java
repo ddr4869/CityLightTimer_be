@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.lang.Assert;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -27,6 +28,12 @@ public class RedisTest {
     private JwtRedis jwtRedis;
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Test
+    public void isRunningRedis() {
+        Assertions.assertThat(jwtRedis.isRedisConnected()).isTrue();
+
+    }
 
     @Test
     public void insertTest() {

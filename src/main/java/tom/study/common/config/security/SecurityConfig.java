@@ -20,8 +20,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import tom.study.common.config.security.filter.JwtAuthenticationFilter;
 import tom.study.common.config.security.filter.RequestValidationFilter;
+import tom.study.common.config.security.filter.entrypoint.CustomJwtEntryPoint;
 import tom.study.common.config.security.jwt.JwtUtil;
-import tom.study.common.config.security.login.CustomAuthenticationEntryPoint;
+import tom.study.common.config.security.filter.entrypoint.CustomAuthenticationEntryPoint;
 import tom.study.common.config.security.login.LoginFailureHandler;
 import tom.study.common.config.security.login.LoginSuccessHandler;
 import tom.study.common.response.error.handler.GlobalExceptionHandler;
@@ -39,6 +40,7 @@ public class SecurityConfig {
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomJwtEntryPoint customJwtEntryPoint;
     private final JwtUtil jwtUtil;
     private final GlobalExceptionHandler globalExceptionHandler;
 
@@ -68,14 +70,15 @@ public class SecurityConfig {
                         }))
                 // 3. UsernamePasswordAuthenticationFilter 전 jwt 인증 filter(JwtAuthenticationFilter)
                 // 4. UsernamePasswordAuthenticationFilter는 로그인 정보를 가로채 AuthenticationManager에게 인증을 요청한다.
-                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class).
+                    exceptionHandling(exceptionConfig -> exceptionConfig.authenticationEntryPoint(customJwtEntryPoint))
+
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/hello") //.permitAll()
                                 .hasAnyAuthority("ROLE_ADMIN")
                                 .anyRequest().permitAll()
                         //.anyRequest().authenticated()
-                )
-                .exceptionHandling( exceptionConfig -> exceptionConfig.authenticationEntryPoint(customAuthenticationEntryPoint));
+                ).exceptionHandling( exceptionConfig -> exceptionConfig.authenticationEntryPoint(customAuthenticationEntryPoint));
 //                .exceptionHandling((exceptionConfig) ->
 //                        exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler));
 //        http    .csrf(AbstractHttpConfigurer::disable)
@@ -111,6 +114,7 @@ public class SecurityConfig {
 
     private final AccessDeniedHandler accessDeniedHandler =
             (request, response, accessDeniedException) -> {
+                log.info("AccessDeniedHandler");
                 ErrorResponse fail = new ErrorResponse(HttpStatus.FORBIDDEN, "Spring security forbidden...");
                 response.setStatus(HttpStatus.FORBIDDEN.value());
                 String json = new ObjectMapper().writeValueAsString(fail);

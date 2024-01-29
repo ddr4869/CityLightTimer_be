@@ -1,4 +1,4 @@
-package tom.study.common.config.security.login;
+package tom.study.common.config.security.filter.entrypoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

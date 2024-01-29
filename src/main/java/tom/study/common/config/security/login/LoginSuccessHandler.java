@@ -53,7 +53,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
             jwtRedis.insertRefreshToken(refreshToken);
 
-
             LoginSuccessResponse loginSuccessResponse = new LoginSuccessResponse();
             loginSuccessResponse.access_token = accessToken;
             loginSuccessResponse.refresh_token = refreshToken;

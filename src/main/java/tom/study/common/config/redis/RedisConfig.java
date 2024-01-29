@@ -30,6 +30,7 @@ public class RedisConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration redisConfiguration = new RedisStandaloneConfiguration();
+        log.info("Redis connect ... -> Port:{}", Port);
         redisConfiguration.setHostName(Host);
         redisConfiguration.setPort(Port);
         redisConfiguration.setPassword(Password);

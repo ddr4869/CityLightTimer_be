@@ -23,6 +23,16 @@ public class JwtRedis {
     private final RedisTemplate<String, Object> redisTemplate;
     private final JwtUtil jwtUtil;
 
+    public boolean isRedisConnected() {
+        try {
+            String pong = redisTemplate.getConnectionFactory().getConnection().ping();
+            return "PONG".equals(pong);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
     public void setValues(String key, String data) {
         ValueOperations<String, Object> values = redisTemplate.opsForValue();
         values.set(key,data);

@@ -34,8 +34,8 @@ public class hello {
 //    }
 
     @GetMapping("hello")
-    public ResponseEntity<Object> hello(HttpServletResponse response) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
-        return ResponseEntity.status(200).body(ApiResponse.ApiResponseSuccess("hello"));
+    public ResponseEntity<Object> hello(HttpServletResponse response) {
+        return ApiResponse.ResponseEntitySuccess("hello");
     }
 
     @GetMapping("test")
