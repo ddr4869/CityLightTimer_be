@@ -101,7 +101,7 @@ public class SpringSecurityTest {
 
     @Test
     public void jwtTest1() throws NoSuchAlgorithmException, InvalidKeySpecException {
-        JwtUtil jwtUtil = new JwtUtil(authorityRepository);
+        JwtUtil jwtUtil = new JwtUtil(userRepository, authorityRepository);
         String jwtStr = jwtUtil.createAccessJwt("tom");
         log.info("token: {}", jwtStr);
     }

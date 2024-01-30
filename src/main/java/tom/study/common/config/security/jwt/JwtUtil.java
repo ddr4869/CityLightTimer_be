@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import tom.study.api.controller.user.model.RefreshResponse;
 import tom.study.common.config.security.CustomUser;
+import tom.study.common.config.security.UserDetailsServiceImpl;
 import tom.study.common.config.security.jwt.model.CustomJwtClaims;
 import tom.study.common.config.security.jwt.redis.JwtRedis;
 import tom.study.domain.user.repository.AuthorityRepository;
@@ -42,9 +43,9 @@ public class JwtUtil {
     @Value("${jwt.expired.refresh}")
     public Long refreshExpired;
     private SecretKey secretKey;
-    private final AuthorityRepository authorityRepository;
-    // Plain secretKey encode
 
+    private final UserRepository userRepository;
+    private final AuthorityRepository authorityRepository;
 
     @PostConstruct
     protected void init() {
@@ -85,11 +86,10 @@ public class JwtUtil {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        String authority = authorityRepository.findDistinctAuthorityByUserName(username);
-        //authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        authorities.add(new SimpleGrantedAuthority(authority));
+        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 
-        CustomUser user = new CustomUser((String) claims.get("userName"), (String) claims.get("userName"), "", authority);
+        UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl(userRepository, authorityRepository);
+        UserDetails user = userDetailsService.loadUserByUsername((String) claims.get("userName"));
         return new UsernamePasswordAuthenticationToken(user, "", authorities);
     }
 

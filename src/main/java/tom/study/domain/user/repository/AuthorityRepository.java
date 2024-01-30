@@ -7,5 +7,5 @@ import tom.study.domain.user.model.entity.Authority;
 import java.util.List;
 
 public interface AuthorityRepository extends JpaRepository<Authority, Long> {
-    String findDistinctAuthorityByUserName(String userName);
+    List<Authority> findDistinctAuthorityByUserName(String userName);
 }

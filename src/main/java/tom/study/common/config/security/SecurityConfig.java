@@ -76,9 +76,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/hello") //.permitAll()
                                 .hasAnyAuthority("ROLE_ADMIN")
-                                .anyRequest().permitAll()
+                                .anyRequest().authenticated() //permitAll()
                         //.anyRequest().authenticated()
-                ).exceptionHandling( exceptionConfig -> exceptionConfig.authenticationEntryPoint(customAuthenticationEntryPoint));
+                ).exceptionHandling( exceptionConfig -> exceptionConfig.accessDeniedHandler(customAuthenticationEntryPoint));
 //                .exceptionHandling((exceptionConfig) ->
 //                        exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler));
 //        http    .csrf(AbstractHttpConfigurer::disable)
@@ -92,7 +92,6 @@ public class SecurityConfig {
 //                .exceptionHandling((exceptionConfig) ->
 //                        exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler)
 //              ); // 401 403 관련 예외처리
-        log.info("http build");
         return http.build();
     }
 
