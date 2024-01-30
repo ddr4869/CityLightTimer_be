@@ -20,13 +20,15 @@ public class QAuthority extends EntityPathBase<Authority> {
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QAuthority authority = new QAuthority("authority");
+    public static final QAuthority authority1 = new QAuthority("authority1");
+
+    public final StringPath authority = createString("authority");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath name = createString("name");
-
     public final QUser user;
+
+    public final StringPath userName = createString("userName");
 
     public QAuthority(String variable) {
         this(Authority.class, forVariable(variable), INITS);

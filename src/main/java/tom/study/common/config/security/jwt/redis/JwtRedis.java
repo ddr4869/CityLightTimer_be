@@ -67,10 +67,9 @@ public class JwtRedis {
         return hash.entries(key);
     }
 
-
     public void insertRefreshToken(String token) {
         HashMap<String, Object> payloads = new HashMap<>();
-        Claims claims = jwtUtil.getPayload(token);
+        Claims claims = jwtUtil.getClaims(token);
         payloads.put("userName", String.valueOf(claims.get("userName")));
         payloads.put("issuedAt",claims.getIssuedAt());
         payloads.put("expired", claims.getExpiration());

@@ -32,29 +32,11 @@ public class WriteUserController {
     private final JwtRedis jwtRedis;
     private final WriteUserUsecase writeUserUsecase;
 
-    @PostMapping("/login")
-    public String login(@RequestBody @Valid LoginUserRequest loginUserRequest) {
-        log.info("login test");
-        return "login test";
-    }
-
-    // TODO : Refresh test
     @PostMapping("/refresh")
     public ResponseEntity<Object> refresh(@RequestHeader("Authorization") String header) throws NoSuchAlgorithmException, InvalidKeySpecException {
         String token = jwtUtil.resolveToken(header);
         Map<String, Object> payloads = jwtRedis.getJwtHash(token);
-        if (payloads.isEmpty()) {
-            // TODO
-            log.info("!!! expired !!!");
-        }
-        //jwtRedis.delKey(token);
-        RefreshResponse response= new RefreshResponse();
-        response.access_token = jwtUtil.createAccessJwt((String) payloads.get("userName"));
-        response.issuer = (String) payloads.get("userName");
-        response.issuedAt = (Date) payloads.get("issuedAt");
-        response.expired = (Date) payloads.get("expired");
-        log.info("access: {}", response);
-        return ApiResponse.ResponseEntitySuccess(response);
+        return ApiResponse.ResponseEntitySuccess(jwtUtil.getCustomClaims(payloads));
     }
 
     @PostMapping("/favorites/{itstId}")

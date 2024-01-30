@@ -28,14 +28,11 @@ public class hello {
 
     private final JwtUtil jwtUtil;
 
-//    @GetMapping("hello")
-//    public ApiResponse<Object> hello(HttpServletResponse response) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
-//        return ApiResponse.ApiResponseSuccess("hello");
-//    }
-
-    @GetMapping("hello")
+    @GetMapping("hello") // User Test
     public ResponseEntity<Object> hello(HttpServletResponse response) {
-        return ApiResponse.ResponseEntitySuccess("hello");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String hello = "hello, " + authentication.getName();
+        return ApiResponse.ResponseEntitySuccess(hello);
     }
 
     @GetMapping("test")

@@ -12,10 +12,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import tom.study.api.controller.user.model.RefreshResponse;
 import tom.study.common.config.security.CustomUser;
+import tom.study.common.config.security.jwt.model.CustomJwtClaims;
+import tom.study.common.config.security.jwt.redis.JwtRedis;
+import tom.study.domain.user.repository.AuthorityRepository;
+import tom.study.domain.user.repository.UserRepository;
 
 import javax.crypto.SecretKey;
 import javax.security.auth.kerberos.EncryptionKey;
@@ -35,10 +41,11 @@ public class JwtUtil {
     public Long accessExpired;
     @Value("${jwt.expired.refresh}")
     public Long refreshExpired;
-
     private SecretKey secretKey;
-
+    private final AuthorityRepository authorityRepository;
     // Plain secretKey encode
+
+
     @PostConstruct
     protected void init() {
         secret=Encoders.BASE64.encode(secret.getBytes());
@@ -72,14 +79,17 @@ public class JwtUtil {
     }
 
     public Authentication getAuthenticationFromToken(String token) {
-        Claims claims = getPayload(token);
+        Claims claims = getClaims(token);
         String username = String.valueOf(claims.get("userName"));
         if (username == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        CustomUser user = new CustomUser((String) claims.get("userName"), (String) claims.get("userName"), "", "ROLE_ADMIN");
+        String authority = authorityRepository.findDistinctAuthorityByUserName(username);
+        //authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        authorities.add(new SimpleGrantedAuthority(authority));
+
+        CustomUser user = new CustomUser((String) claims.get("userName"), (String) claims.get("userName"), "", authority);
         return new UsernamePasswordAuthenticationToken(user, "", authorities);
     }
 
@@ -103,7 +113,7 @@ public class JwtUtil {
             throw new IllegalArgumentException();
         }
     }
-    public Claims getPayload(String token) {
+    public Claims getClaims(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
             return claims.getPayload();
@@ -111,5 +121,17 @@ public class JwtUtil {
             log.info("Jwt claims something wrong : {}", token);
             throw e;
         }
+    }
+
+    public CustomJwtClaims getCustomClaims(Map<String, Object> payloads) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        if (payloads.isEmpty()) {
+            log.info("!!! expired or invalid token !!!");
+        }
+        CustomJwtClaims customJwtClaims= new CustomJwtClaims();
+        customJwtClaims.access_token = createAccessJwt((String) payloads.get("userName"));
+        customJwtClaims.issuer = (String) payloads.get("userName");
+        customJwtClaims.issuedAt = (Date) payloads.get("issuedAt");
+        customJwtClaims.expired = (Date) payloads.get("expired");
+        return customJwtClaims;
     }
 }

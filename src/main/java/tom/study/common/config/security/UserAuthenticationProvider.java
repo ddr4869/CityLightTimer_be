@@ -22,7 +22,6 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
         // 6. Authentication로 제공된 사용자 아이디/PW를 통해 DB로 인증 확인
         // 7. 인증 성공 시 UsernamePasswordAuthenticationToken로 Authentication를 생성하여 AuthenticationManager로 반환한다.
-        log.info("test1");
         UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
         log.info("UsernamePasswordAuthenticationToken start - getUsername: {}, getAuthorities: {}", userDetails.getUsername(), userDetails.getAuthorities());
         return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());

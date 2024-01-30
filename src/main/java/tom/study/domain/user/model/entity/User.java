@@ -41,7 +41,7 @@ public class User {
             authorities = new ArrayList<>();
         }
         Authority authority = new Authority();
-        authority.setName(auth);
+        authority.setAuthority(auth);
         authority.setUser(this);
         authorities.add(authority);
     }

@@ -9,15 +9,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import tom.study.api.controller.reservation.model.ReservationQueryRequest;
 import tom.study.api.usecase.reservation.ReadReservationUsecase;
 import tom.study.common.config.security.UserDetailsServiceImpl;
 import tom.study.common.config.security.jwt.JwtUtil;
-import tom.study.domain.reservation.model.entity.Reservation;
 import tom.study.domain.user.model.entity.Authority;
 import tom.study.domain.user.model.entity.User;
 import tom.study.domain.user.repository.UserRepository;
-import tom.study.domain.user.repository.custom.AuthorityRepository;
+import tom.study.domain.user.repository.AuthorityRepository;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -49,8 +47,9 @@ public class SpringSecurityTest {
         userRepository.save(user1);
 
         Authority authority1 = new Authority();
-        authority1.setName("ROLE_USER");
+        authority1.setAuthority("ROLE_USER");
         authority1.setUser(user1);
+        authority1.setUserName("richard");
         authorityRepository.save(authority1);
 
         User user2 = new User();
@@ -60,8 +59,9 @@ public class SpringSecurityTest {
         userRepository.save(user2);
 
         Authority authority2 = new Authority();
-        authority2.setName("ROLE_ADMIN");
+        authority2.setAuthority("ROLE_ADMIN");
         authority2.setUser(user2);
+        authority2.setUserName("tom");
         authorityRepository.save(authority2);
     }
 
@@ -101,7 +101,7 @@ public class SpringSecurityTest {
 
     @Test
     public void jwtTest1() throws NoSuchAlgorithmException, InvalidKeySpecException {
-        JwtUtil jwtUtil = new JwtUtil();
+        JwtUtil jwtUtil = new JwtUtil(authorityRepository);
         String jwtStr = jwtUtil.createAccessJwt("tom");
         log.info("token: {}", jwtStr);
     }

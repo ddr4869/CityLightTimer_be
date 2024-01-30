@@ -23,6 +23,5 @@ public class UserService {
 
     public void delFavorites(Favorites favorites) {
         favoritesRepository.delete(favorites);
-
     }
 }

@@ -11,7 +11,6 @@ import java.util.Date;
 public class CreateFavoriteRequest {
     @NotNull
     public String itstId;
-
     public String userName;
 
     public Favorites ModelToEntity(CreateFavoriteRequest createFavoriteRequest) {
