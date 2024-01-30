@@ -27,12 +27,20 @@ public class ApiResponse<T> {
         return ApiResponse.builder().status(200).code("SUCCESS").message("OK").data(data).build();
     }
 
+    public static ApiResponse<Object> ApiResponseSuccessMessage() {
+        return ApiResponse.builder().status(200).code("SUCCESS").message("OK").data("SUCCESS").build();
+    }
+
     public static ApiResponse<Object> ApiResponseUnauthorized(String message) {
         return ApiResponse.builder().status(401).code("Unauthorized").message(message).build();
     }
 
     public static ResponseEntity<Object> ResponseEntitySuccess(Object data) {
         return ResponseEntity.status(200).body(ApiResponseSuccess(data));
+    }
+
+    public static ResponseEntity<Object> ResponseEntitySuccessMessage() {
+        return ResponseEntity.status(200).body(ApiResponseSuccess("SUCCESS"));
     }
 
     @Getter

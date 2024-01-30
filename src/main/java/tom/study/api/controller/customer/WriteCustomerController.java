@@ -18,7 +18,7 @@ public class WriteCustomerController {
     private final WriteCustomerUsecase writeCustomerUsercase;
 
     @PostMapping("/create")
-    public ApiResponse<Object> createCustomer(@RequestBody @Valid CustomerCreateRequest customerCreateRequest) {
-        return ApiResponse.ApiResponseSuccess(writeCustomerUsercase.execute(customerCreateRequest));
+    public ResponseEntity<Object> createCustomer(@RequestBody @Valid CustomerCreateRequest customerCreateRequest) {
+        return writeCustomerUsercase.execute(customerCreateRequest);
     }
 }

@@ -1,6 +1,7 @@
 package tom.study.api.controller.reservation;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,15 +23,15 @@ import java.util.Optional;
 public class ReadReservationController {
     private final ReadReservationUsecase readReservationUsecase;
     @GetMapping("/view/lists")
-    public ApiResponse<Object> getAllReservations() {
+    public ResponseEntity<Object> getAllReservations() {
         ReservationQueryAllRequest reservationQueryAllRequest = new ReservationQueryAllRequest();
-        return ApiResponse.ApiResponseSuccess(readReservationUsecase.execute(reservationQueryAllRequest));
+        return readReservationUsecase.execute(reservationQueryAllRequest);
     }
 
     @GetMapping("/view/{id}")
-    public ApiResponse<Object> getReservation(@PathVariable("id") Long id) {
+    public ResponseEntity<Object> getReservation(@PathVariable("id") Long id) {
         ReservationQueryRequest reservationQueryRequest = new ReservationQueryRequest();
         reservationQueryRequest.setId(id);
-        return ApiResponse.ApiResponseSuccess(readReservationUsecase.execute(reservationQueryRequest));
+        return readReservationUsecase.execute(reservationQueryRequest);
     }
 }

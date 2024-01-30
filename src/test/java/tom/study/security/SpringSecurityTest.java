@@ -98,14 +98,6 @@ public class SpringSecurityTest {
         }
     }
 
-    @Test
-    public void getReservationTest() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("name: {}", authentication.getName());
-        ReservationQueryRequest reservationQueryRequest = new ReservationQueryRequest();
-        reservationQueryRequest.setId(1L);
-        Reservation reservation = readReservationUsecase.execute(reservationQueryRequest);
-    }
 
     @Test
     public void jwtTest1() throws NoSuchAlgorithmException, InvalidKeySpecException {

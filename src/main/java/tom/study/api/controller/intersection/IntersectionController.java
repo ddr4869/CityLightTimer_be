@@ -1,6 +1,7 @@
 package tom.study.api.controller.intersection;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,18 +20,18 @@ import java.util.List;
 public class IntersectionController {
     private final IntersectionService intersectionService;
     @GetMapping("/list")
-    public ApiResponse<Object> getIntersectionList() {
-        return ApiResponse.ApiResponseSuccess(intersectionService.intersectionInformation());
+    public ResponseEntity<Object> getIntersectionList() {
+        return intersectionService.intersectionInformation();
     }
 
     @GetMapping("/list/simple")
-    public ApiResponse<Object> getIntersectionSimpleList() throws IOException {
-        return ApiResponse.ApiResponseSuccess(intersectionService.intersectionSimpleInformation());
+    public ResponseEntity<Object> getIntersectionSimpleList() throws IOException {
+        return intersectionService.intersectionSimpleInformation();
     }
 
     // TODO
     @GetMapping("/list/neighbor")
-    public ApiResponse<Object> getNeighborIntersectionSimple(LightRequest lightRequest) throws IOException {
-        return ApiResponse.ApiResponseSuccess(intersectionService.intersectionSimpleInformation());
+    public ResponseEntity<Object> getNeighborIntersectionSimple(LightRequest lightRequest) throws IOException {
+        return intersectionService.intersectionSimpleInformation();
     }
 }

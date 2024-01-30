@@ -3,6 +3,7 @@ package tom.study.api.controller.schedule;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ public class WriteScheduleController {
     private final WriteScheduleUsecase writeScheduleUsecase;
 
     @PostMapping("/create")
-    public ApiResponse<Object> createSchedule(@RequestBody @Valid ScheduleCreateRequest scheduleCreateRequest) {
-        return ApiResponse.ApiResponseSuccess(writeScheduleUsecase.execute(scheduleCreateRequest));
+    public ResponseEntity<Object> createSchedule(@RequestBody @Valid ScheduleCreateRequest scheduleCreateRequest) {
+        return writeScheduleUsecase.execute(scheduleCreateRequest);
     }
 }

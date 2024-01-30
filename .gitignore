@@ -2,3 +2,4 @@ certification/
 out/
 build/
 logs/
+src/main/generated

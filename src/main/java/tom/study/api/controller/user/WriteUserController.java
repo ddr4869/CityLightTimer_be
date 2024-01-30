@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tom.study.api.controller.schedule.model.ScheduleCreateRequest;
 import tom.study.api.controller.user.model.CreateFavoriteRequest;
+import tom.study.api.controller.user.model.DeleteFavoriteRequest;
 import tom.study.api.controller.user.model.LoginUserRequest;
 import tom.study.api.controller.user.model.RefreshResponse;
 import tom.study.api.usecase.user.WriteUserUsecase;
@@ -57,9 +58,16 @@ public class WriteUserController {
     }
 
     @PostMapping("/favorites/{itstId}")
-    public ApiResponse<Object> addUserFavorites(@PathVariable("itstId") String itstId) {
-        CreateFavoriteRequest favoriteRequest = new CreateFavoriteRequest();
-        favoriteRequest.itstId=itstId;
-        return ApiResponse.ApiResponseSuccess(writeUserUsecase.execute(favoriteRequest));
+    public ResponseEntity<Object> addUserFavorites(@PathVariable("itstId") String itstId) {
+        CreateFavoriteRequest createFavoriteRequest = new CreateFavoriteRequest();
+        createFavoriteRequest.itstId=itstId;
+        return writeUserUsecase.execute(createFavoriteRequest);
+    }
+
+    @DeleteMapping("/favorites/{itstId}")
+    public ResponseEntity<Object> deleteUserFavorites(@PathVariable("itstId") String itstId) {
+        DeleteFavoriteRequest deleteFavoriteRequest = new DeleteFavoriteRequest();
+        deleteFavoriteRequest.itstId=itstId;
+        return writeUserUsecase.execute(deleteFavoriteRequest);
     }
 }

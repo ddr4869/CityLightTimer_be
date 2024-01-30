@@ -20,4 +20,9 @@ public class UserService {
     public Favorites addFavorites(Favorites favorites) {
         return favoritesRepository.save(favorites);
     }
+
+    public void delFavorites(Favorites favorites) {
+        favoritesRepository.delete(favorites);
+
+    }
 }

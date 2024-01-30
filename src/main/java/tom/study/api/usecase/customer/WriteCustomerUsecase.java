@@ -2,8 +2,10 @@ package tom.study.api.usecase.customer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import tom.study.api.controller.customer.model.CustomerCreateRequest;
+import tom.study.common.response.ApiResponse;
 import tom.study.domain.customer.model.entity.Customer;
 import tom.study.domain.customer.service.CustomerService;
 
@@ -15,7 +17,7 @@ public class WriteCustomerUsecase {
 
     private final CustomerService customerService;
 
-    public Customer execute(CustomerCreateRequest customerCreateRequest) {
-        return customerService.createUser(customerCreateRequest.ModelToEntity(customerCreateRequest));
+    public ResponseEntity<Object> execute(CustomerCreateRequest customerCreateRequest) {
+        return ApiResponse.ResponseEntitySuccess(customerService.createUser(customerCreateRequest.ModelToEntity(customerCreateRequest)));
     }
 }
