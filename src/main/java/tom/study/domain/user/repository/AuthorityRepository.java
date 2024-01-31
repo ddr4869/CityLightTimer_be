@@ -5,7 +5,9 @@ import tom.study.domain.schedule.model.entity.Schedule;
 import tom.study.domain.user.model.entity.Authority;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AuthorityRepository extends JpaRepository<Authority, Long> {
-    List<Authority> findDistinctAuthorityByUserName(String userName);
+    List<Authority> findAuthorityByUserName(String userName);
+    Optional<Authority> findAuthorityByUserNameAndAuthority(String userName, String authority);
 }

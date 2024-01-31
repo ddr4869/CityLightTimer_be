@@ -23,7 +23,7 @@ public class UserTest {
 
     @Test
     public void authorityTest1() {
-        List<Authority> authorities = authorityRepository.findDistinctAuthorityByUserName("richard");
+        List<Authority> authorities = authorityRepository.findAuthorityByUserName("richard");
         for(Authority authority : authorities) {
             log.info("authority!! : {}", authority.getAuthority());
         }

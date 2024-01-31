@@ -17,6 +17,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     private final UserDetailsServiceImpl userDetailsServiceImpl;
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        log.info("*** AuthenticationProvider ***");
         String username = authentication.getName();
         log.info("authenticate usename: {}", username);
         String password = authentication.getCredentials().toString();

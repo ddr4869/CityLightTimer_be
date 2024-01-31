@@ -70,27 +70,25 @@ public class SecurityConfig {
                         }))
                 // 3. UsernamePasswordAuthenticationFilter 전 jwt 인증 filter(JwtAuthenticationFilter)
                 // 4. UsernamePasswordAuthenticationFilter는 로그인 정보를 가로채 AuthenticationManager에게 인증을 요청한다.
-                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class).
-                    exceptionHandling(exceptionConfig -> exceptionConfig.authenticationEntryPoint(customJwtEntryPoint))
+                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                    .exceptionHandling(exceptionConfig -> exceptionConfig.accessDeniedHandler(customJwtEntryPoint))
+
 
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/hello") //.permitAll()
                                 .hasAnyAuthority("ROLE_ADMIN")
-                                .anyRequest().authenticated() //permitAll()
-                        //.anyRequest().authenticated()
-                ).exceptionHandling( exceptionConfig -> exceptionConfig.accessDeniedHandler(customAuthenticationEntryPoint));
+                        .requestMatchers("/login**", "/api/user/signup", "/api/user/refresh").permitAll()
+                        .anyRequest().authenticated() ) //permitAll()
+                .exceptionHandling( exceptionConfig -> exceptionConfig.accessDeniedHandler(customAuthenticationEntryPoint));
+
 //                .exceptionHandling((exceptionConfig) ->
 //                        exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler));
 //        http    .csrf(AbstractHttpConfigurer::disable)
 //                .formLogin(withDefaults())
 //                .addFilterBefore(requestValidationFilter, BasicAuthenticationFilter.class)
 //                .formLogin(withDefaults())
-//                .authorizeHttpRequests(
-//                        (authorizeRequests) -> authorizeRequests
-//                                .requestMatchers("/", "/login**", "/error", "/api/customer/**").permitAll()
-//                                .requestMatchers("/api/user").hasRole("test") )
-//                .exceptionHandling((exceptionConfig) ->
-//                        exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler)
+//                .authorizeHttpRequests(authorizeRequests -> authorizeRequests.requestMatchers("/login**", "/api/user/signup", "/api/user/refresh").permitAll())
+//                    .exceptionHandling(exceptionConfig -> exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler));
 //              ); // 401 403 관련 예외처리
         return http.build();
     }

@@ -16,6 +16,7 @@ import tom.study.common.response.error.errorCode.CommonErrorCode;
 import tom.study.common.response.error.handler.GlobalExceptionHandler;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -24,23 +25,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     //private final GlobalExceptionHandler globalExceptionHandler;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-
         log.info("*** JwtAuthenticationFilter ***");
         try {
             String token = jwtUtil.resolveToken(request.getHeader("Authorization"));
             if (token != null && jwtUtil.validateToken(token)) {
                 Authentication authentication = jwtUtil.getAuthenticationFromToken(token);
             }
-        } catch (ExpiredJwtException e) {
-            log.info("*** Invalid ExpiredJwtException token ***");
-            jwtErrResponse(response, CommonErrorCode.EXPIRED_TOKEN);
-            return ;
-        }  catch (Exception e) {
-            log.info("*** Invalid Exception token ***");
+        } catch (Exception e) {
+            log.info("*** Invalid token ***");
             jwtErrResponse(response, CommonErrorCode.INVALID_TOKEN);
             return ;
         }
         chain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String[] excludePath = {"/api/user/signup", "/api/user/refresh"};
+        String path = request.getRequestURI();
+        log.info("should not filter : {}", path);
+        log.info("should not filter true?: {}", Arrays.stream(excludePath).anyMatch(path::startsWith));
+        return Arrays.stream(excludePath).anyMatch(path::startsWith);
     }
 
     private void jwtErrResponse(HttpServletResponse response, CommonErrorCode code) throws IOException{

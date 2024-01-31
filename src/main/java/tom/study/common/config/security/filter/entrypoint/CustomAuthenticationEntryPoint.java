@@ -22,7 +22,7 @@ import java.io.IOException;
 public class CustomAuthenticationEntryPoint implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        log.info("![Login Fail] - LoginFailureHandler");
+        log.info("![Access Denied] - AccessDeniedHandler");
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonResponse = objectMapper.writeValueAsString(
                 ApiResponse.ApiResponseUnauthorized("You do not have access")

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import tom.study.api.controller.customer.model.CustomerCreateRequest;
 import tom.study.api.controller.user.model.CreateFavoriteRequest;
 import tom.study.api.controller.user.model.DeleteFavoriteRequest;
+import tom.study.api.controller.user.model.EmpowermentRequest;
+import tom.study.api.controller.user.model.SignupRequest;
 import tom.study.common.response.ApiResponse;
 import tom.study.domain.customer.model.entity.Customer;
 import tom.study.domain.customer.service.CustomerService;
@@ -33,6 +35,15 @@ public class WriteUserUsecase {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         deleteFavoriteRequest.userName=authentication.getName();
         userService.delFavorites(deleteFavoriteRequest.ModelToEntity(deleteFavoriteRequest));
+        return ApiResponse.ResponseEntitySuccessMessage();
+    }
+
+    public ResponseEntity<Object> execute(SignupRequest signupRequest) {
+        return ApiResponse.ResponseEntitySuccess(userService.signupUser(signupRequest.ModelToEntity(signupRequest)));
+    }
+
+    public ResponseEntity<Object> execute(EmpowermentRequest empowermentRequest) {
+        userService.empowermentUser(empowermentRequest.ModelToEntity(empowermentRequest));
         return ApiResponse.ResponseEntitySuccessMessage();
     }
 }
