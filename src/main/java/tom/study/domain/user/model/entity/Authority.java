@@ -1,5 +1,6 @@
 package tom.study.domain.user.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class Authority {
 
     @ManyToOne
     @JoinColumn(name= "user_id")
+    @JsonIgnore
     private User user;
 
     public static class Authority_Type {

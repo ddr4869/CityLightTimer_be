@@ -1,5 +1,6 @@
 package tom.study.domain.user.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -13,8 +14,4 @@ public class Favorites {
 //    private Long id;
     @EmbeddedId
     private FavoritesCompositeKey userItsId;
-
-    @ManyToOne
-    @JoinColumn(name= "user_id")
-    private User user;
 }

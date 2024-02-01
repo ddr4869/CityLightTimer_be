@@ -33,9 +33,6 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Authority> authorities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Favorites> favorites = new ArrayList<>();
-
     public void addAuthorities(String auth) {
         if (authorities==null) {
             authorities = new ArrayList<>();

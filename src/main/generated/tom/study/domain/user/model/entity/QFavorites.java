@@ -22,8 +22,6 @@ public class QFavorites extends EntityPathBase<Favorites> {
 
     public static final QFavorites favorites = new QFavorites("favorites");
 
-    public final QUser user;
-
     public final QFavoritesCompositeKey userItsId;
 
     public QFavorites(String variable) {
@@ -44,7 +42,6 @@ public class QFavorites extends EntityPathBase<Favorites> {
 
     public QFavorites(Class<? extends Favorites> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
         this.userItsId = inits.isInitialized("userItsId") ? new QFavoritesCompositeKey(forProperty("userItsId")) : null;
     }
 
