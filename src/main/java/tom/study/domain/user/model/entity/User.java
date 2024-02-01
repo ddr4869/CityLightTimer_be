@@ -15,15 +15,11 @@ import java.util.List;
 @Table
 @Getter @Setter
 public class User {
-
-//    @Autowired
-//    AuthorityRepository authorityRepository;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column()
+    @Column(unique = true)
     @NotNull
     private String username;
 
@@ -34,8 +30,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     private EncryptionAlgorithm algorithm;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Authority> authorities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Favorites> favorites = new ArrayList<>();
 
     public void addAuthorities(String auth) {
         if (authorities==null) {

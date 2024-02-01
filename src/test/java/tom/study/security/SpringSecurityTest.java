@@ -41,7 +41,7 @@ public class SpringSecurityTest {
     @Test
     public void CreateUser1() {
         User user1 = new User();
-        user1.setUsername("richard");
+        user1.setUsername("zxc");
         user1.setPassword("1234");
         user1.setAlgorithm(BCRYPT);
         userRepository.save(user1);
@@ -53,7 +53,7 @@ public class SpringSecurityTest {
         authorityRepository.save(authority1);
 
         User user2 = new User();
-        user2.setUsername("tom");
+        user2.setUsername("zxca");
         user2.setPassword("1234");
         user2.setAlgorithm(BCRYPT);
         userRepository.save(user2);

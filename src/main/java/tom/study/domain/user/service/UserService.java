@@ -2,6 +2,7 @@ package tom.study.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import tom.study.domain.user.model.entity.Authority;
 import tom.study.domain.user.model.entity.Favorites;
@@ -11,6 +12,7 @@ import tom.study.domain.user.repository.FavoritesRepository;
 import tom.study.domain.user.repository.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -31,27 +33,27 @@ public class UserService {
     }
 
     public User signupUser(User user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new DuplicateKeyException("username is already exist");
+        }
         User createdUser = userRepository.save(user);
         Authority authority = new Authority();
         authority.setUser(createdUser);
         authority.setUserName(createdUser.getUsername());
         authority.setAuthority(Authority.Authority_Type.ROLE_USER);
         authorityRepository.save(authority);
-        //createdUser.addAuthorities(Authority.Authority_Type.ROLE_USER);
         return createdUser;
     }
-    public void empowermentUser(User user) {
-        List<Authority> authorityList = authorityRepository.findAuthorityByUserName(user.getUsername());
-        if (authorityList.size()==1) {
-            Authority authority = new Authority();
-            authority.setUser(user);
-            authority.setUserName(user.getUsername());
-            authority.setAuthority(Authority.Authority_Type.ROLE_ADMIN);
-            authorityRepository.save(authority);
-            user.addAuthorities(Authority.Authority_Type.ROLE_ADMIN);
-        } else if (authorityList.size()==2){
-            Optional<Authority> authority = authorityRepository.findAuthorityByUserNameAndAuthority(user.getUsername(), Authority.Authority_Type.ROLE_ADMIN);
-            authorityRepository.delete(authority.stream().findFirst().orElseThrow());
-        }
+
+    public void empowermentUser(String userName) {
+        Optional<Authority> authority = authorityRepository.findByUserName(userName);
+        authority.ifPresent(auth -> {
+            if (Objects.equals(auth.getAuthority(), Authority.Authority_Type.ROLE_USER)) {
+                auth.setAuthority(Authority.Authority_Type.ROLE_ADMIN);
+            } else {
+                auth.setAuthority(Authority.Authority_Type.ROLE_USER);
+            }
+            authorityRepository.save(auth);
+        });
     }
 }

@@ -13,4 +13,8 @@ public class Favorites {
 //    private Long id;
     @EmbeddedId
     private FavoritesCompositeKey userItsId;
+
+    @ManyToOne
+    @JoinColumn(name= "user_id")
+    private User user;
 }

@@ -43,7 +43,7 @@ public class WriteUserUsecase {
     }
 
     public ResponseEntity<Object> execute(EmpowermentRequest empowermentRequest) {
-        userService.empowermentUser(empowermentRequest.ModelToEntity(empowermentRequest));
+        userService.empowermentUser(empowermentRequest.getUsername());
         return ApiResponse.ResponseEntitySuccessMessage();
     }
 }

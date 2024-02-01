@@ -24,6 +24,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final ListPath<Authority, QAuthority> authorities = this.<Authority, QAuthority>createList("authorities", Authority.class, QAuthority.class, PathInits.DIRECT2);
 
+    public final ListPath<Favorites, QFavorites> favorites = this.<Favorites, QFavorites>createList("favorites", Favorites.class, QFavorites.class, PathInits.DIRECT2);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath password = createString("password");

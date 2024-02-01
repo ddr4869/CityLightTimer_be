@@ -89,7 +89,7 @@ class StudyApplicationTests {
 
 	@Test
 	void queryReservationCustomerTest3() {
-		Customer customer = customerRepository.findByCustomerName("dustin").orElseThrow(() -> new IllegalArgumentException("qwe"));
+		Customer customer = customerRepository.findByCustomerName("dustin").orElseThrow(() -> new IllegalArgumentException("test"));
 		Customer mockCustomer = new Customer();
 		Customer orElseCustomer = new Customer();
 		mockCustomer.setCustomerName("낄낄커스토머");

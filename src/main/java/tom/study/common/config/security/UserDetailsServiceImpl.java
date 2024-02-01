@@ -7,9 +7,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import tom.study.domain.user.model.entity.Authority;
 import tom.study.domain.user.model.entity.User;
 import tom.study.domain.user.repository.AuthorityRepository;
 import tom.study.domain.user.repository.UserRepository;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -22,10 +25,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("name: {}", username);
-
-        User user = userRepository.findUserByUsername(username).orElseThrow(
+        User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new UsernameNotFoundException("user can't found!")
         );
+        log.info("findAuthorityByUserName: {}",authorityRepository.findAuthorityByUserName(user.getUsername()));
+        List<Authority> authorityList =  authorityRepository.findAuthorityByUserName(user.getUsername());
+        log.info("List<Authority>: {}", authorityList);
         user.setAuthorities(authorityRepository.findAuthorityByUserName(user.getUsername()));
         return new EntityUserDetails(user);
     }

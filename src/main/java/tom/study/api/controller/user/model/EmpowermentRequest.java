@@ -1,19 +1,21 @@
 package tom.study.api.controller.user.model;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import tom.study.domain.user.model.entity.User;
+import tom.study.domain.user.repository.UserRepository;
 
+import java.util.Optional;
+
+@Data
+@Slf4j
 public class EmpowermentRequest {
     @NotNull
-    public String username;
+    private String username;
     @NotNull
-    public String password;
-
-    public User ModelToEntity(EmpowermentRequest empowermentRequest) {
-        User user = new User();
-        user.setUsername(empowermentRequest.username);
-        user.setPassword(empowermentRequest.password);
-        user.setAlgorithm(User.EncryptionAlgorithm.BCRYPT);
-        return user;
-    }
+    private String password;
 }
