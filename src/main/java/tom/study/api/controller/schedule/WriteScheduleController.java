@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tom.study.api.controller.schedule.model.ScheduleCreateRequest;
 import tom.study.api.usecase.schedule.WriteScheduleUsecase;
-import tom.study.common.response.ApiResponse;
-import tom.study.domain.schedule.model.entity.Schedule;
 
 @RestController
 @RequestMapping("/api/schedule")

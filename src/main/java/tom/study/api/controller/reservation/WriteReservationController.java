@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tom.study.api.controller.reservation.model.ReservationCreateRequest;
 import tom.study.api.usecase.reservation.WriteReservationUsecase;
-import tom.study.common.response.ApiResponse;
-import tom.study.domain.reservation.model.entity.Reservation;
 
 @RestController
 @RequestMapping("/api/reservation")

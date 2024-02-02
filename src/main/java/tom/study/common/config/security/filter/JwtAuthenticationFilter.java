@@ -26,12 +26,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         log.info("*** JwtAuthenticationFilter ***");
-        try {
-            String token = jwtUtil.resolveToken(request.getHeader("Authorization"));
-            if (token != null && jwtUtil.validateToken(token)) {
-                Authentication authentication = jwtUtil.getAuthenticationFromToken(token);
-            }
-        } catch (Exception e) {
+        String token = jwtUtil.resolveToken(request.getHeader("Authorization"));
+        if (token != null && jwtUtil.validateToken(token)) {
+            Authentication authentication = jwtUtil.getAuthenticationFromToken(token);
+        } else {
             log.info("*** Invalid token ***");
             jwtErrResponse(response, CommonErrorCode.INVALID_TOKEN);
             return ;
@@ -43,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
         String[] excludePath = {"/swagger-ui", "/api-docs", "/webjars", "/swagger-resources",
-                "/error", "/login", "/api/user/refresh", "/api/user/signup", "/logout", "/favicon.ico"};
+                "/error", "/login",  "/api/user/signup", "/logout", "/favicon.ico"}; // "/api/user/refresh",
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
     }
 

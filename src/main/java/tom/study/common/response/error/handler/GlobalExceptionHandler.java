@@ -1,6 +1,6 @@
 package tom.study.common.response.error.handler;
 
-import com.sun.jdi.request.DuplicateRequestException;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -14,11 +14,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import tom.study.common.response.ApiResponse;
+import tom.study.common.response.CommonResponse;
 import tom.study.common.response.error.errorCode.CommonErrorCode;
 import tom.study.common.response.error.errorCode.ErrorCode;
 import tom.study.common.response.error.exception.RestApiException;
-import tom.study.common.response.error.response.ErrorResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +38,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(errorCode);
     }
 
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<Object> handleCustomException(FeignException e) {
+        log.info("FeignException", e);
+        ErrorCode errorCode = CommonErrorCode.BAD_REQUEST;
+        return handleExceptionInternal(errorCode, "feign response time out");
+    }
+
     @Override
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         log.info("MethodArgumentTypeMismatchException", e);
@@ -48,7 +54,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         for (String str : errors) {
             log.info("{}",str);
         }
-
         ErrorCode errorCode = CommonErrorCode.BAD_REQUEST;
         return handleExceptionInternal(e, errorCode);
     }
@@ -98,22 +103,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(makeErrorResponse(e, errorCode));
     }
 
-    public static ApiResponse<Object> makeErrorResponse(ErrorCode errorCode) {
-        return ApiResponse.builder()
+    public static CommonResponse<Object> makeErrorResponse(ErrorCode errorCode) {
+        return CommonResponse.builder()
                 .status(errorCode.getHttpStatus().value())
                 .code(errorCode.name())
                 .message(errorCode.getMessage())
                 .build();
     }
 
-    public ApiResponse<Object> makeErrorResponse(MethodArgumentNotValidException e, ErrorCode errorCode) {
-        List<ApiResponse.ValidationError> validationErrorList = e.getBindingResult()
+    public CommonResponse<Object> makeErrorResponse(MethodArgumentNotValidException e, ErrorCode errorCode) {
+        List<CommonResponse.ValidationError> validationErrorList = e.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(ApiResponse.ValidationError::of)
+                .map(CommonResponse.ValidationError::of)
                 .collect(Collectors.toList());
 
-        return ApiResponse.builder()
+        return CommonResponse.builder()
                 .status(errorCode.getHttpStatus().value())
                 .code(errorCode.name())
                 .message(errorCode.getMessage())
@@ -121,8 +126,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
     }
 
-    public ApiResponse<Object> makeErrorResponse(ErrorCode errorCode, String message) {
-        return ApiResponse.builder()
+    public CommonResponse<Object> makeErrorResponse(ErrorCode errorCode, String message) {
+        return CommonResponse.builder()
                 .status(errorCode.getHttpStatus().value())
                 .code(errorCode.name())
                 .message(message)

@@ -2,8 +2,6 @@ package tom.study.api.controller.reservation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,11 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import tom.study.api.controller.reservation.model.ReservationQueryAllRequest;
 import tom.study.api.controller.reservation.model.ReservationQueryRequest;
 import tom.study.api.usecase.reservation.ReadReservationUsecase;
-import tom.study.common.response.ApiResponse;
-import tom.study.domain.reservation.model.entity.Reservation;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/reservation")

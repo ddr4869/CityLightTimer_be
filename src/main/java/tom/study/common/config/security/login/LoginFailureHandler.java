@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
-import tom.study.common.response.ApiResponse;
+import tom.study.common.response.CommonResponse;
 
 import java.io.IOException;
 
@@ -25,7 +25,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         log.info("![Login Fail] - LoginFailureHandler");
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonResponse = objectMapper.writeValueAsString(
-                ApiResponse.ApiResponseUnauthorized("Please check ID or PW")
+                CommonResponse.ApiResponseUnauthorized("Please check ID or PW")
         );
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(String.valueOf(jsonResponse));

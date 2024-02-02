@@ -1,25 +1,15 @@
 package tom.study.api.controller;
 
-import io.jsonwebtoken.Jwts;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tom.study.common.config.security.jwt.JwtUtil;
-import tom.study.common.response.ApiResponse;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
+import tom.study.common.response.CommonResponse;
 
 @RestController
 @Slf4j
@@ -32,7 +22,7 @@ public class hello {
     public ResponseEntity<Object> hello(HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String hello = "hello, " + authentication.getName();
-        return ApiResponse.ResponseEntitySuccess(hello);
+        return CommonResponse.ResponseEntitySuccess(hello);
     }
 
     @GetMapping("test")

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tom.study.api.controller.customer.model.CustomerCreateRequest;
 import tom.study.api.usecase.customer.WriteCustomerUsecase;
-import tom.study.common.response.ApiResponse;
 
 @RestController
 @RequestMapping("/api/customer")
