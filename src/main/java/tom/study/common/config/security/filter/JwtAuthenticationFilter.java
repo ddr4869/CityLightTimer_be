@@ -29,12 +29,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = jwtUtil.resolveToken(request.getHeader("Authorization"));
         if (token != null && jwtUtil.validateToken(token)) {
             Authentication authentication = jwtUtil.getAuthenticationFromToken(token);
+            chain.doFilter(request, response);
+        } else if (token == null ) {
+            chain.doFilter(request, response);
         } else {
             log.info("*** Invalid token ***");
             jwtErrResponse(response, CommonErrorCode.INVALID_TOKEN);
             return ;
         }
-        chain.doFilter(request, response);
     }
 
     @Override

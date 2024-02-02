@@ -32,6 +32,7 @@ public class LightController {
             @ApiResponse(responseCode = "400", description = "교차로ID(itsId)가 잘못되었을 때 timeout 에러가 발생합니다.",
                     content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
+
     @GetMapping("")
     public ResponseEntity<Object> getLightTimingFeign(
             @RequestParam(name = "itstId") String itstId,

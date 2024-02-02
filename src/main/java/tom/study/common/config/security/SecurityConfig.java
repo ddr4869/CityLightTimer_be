@@ -72,14 +72,14 @@ public class SecurityConfig {
                 // 4. UsernamePasswordAuthenticationFilter는 로그인 정보를 가로채 AuthenticationManager에게 인증을 요청한다.
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                     .exceptionHandling(exceptionConfig -> exceptionConfig.accessDeniedHandler(customJwtEntryPoint))
-
+                // set security filter if bearer token is valid, anyRequest is authenticated, else permitAll
 
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/hello").hasAnyAuthority("ROLE_ADMIN")
-                        .requestMatchers("/login**", "/api/user/signup", "/api/user/refresh", "/swagger-ui/**", "/api-docs/**").permitAll()
+                        .requestMatchers("/api/user/refresh, /api/user/favorites").authenticated()
                         .anyRequest().permitAll() )  //authenticated()
+                        // .requestMatchers("/login**", "/api/user/signup", "/api/user/refresh", "/swagger-ui/**", "/api-docs/**").permitAll()
                 .exceptionHandling( exceptionConfig -> exceptionConfig.accessDeniedHandler(customAuthenticationEntryPoint));
-
         return http.build();
     }
 
