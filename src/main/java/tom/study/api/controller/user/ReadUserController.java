@@ -13,12 +13,6 @@ public class ReadUserController {
         return "login";
     }
 
-    @GetMapping("/basic")
-    public String basic(Model model) {
-        model.addAttribute("data", "test");
-        return "basic";
-    }
-
     @GetMapping("/map")
     public String map() {
         return "map";

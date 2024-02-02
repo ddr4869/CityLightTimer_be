@@ -12,7 +12,7 @@ import tom.study.common.logger.LogTrace;
 import tom.study.common.logger.ThreadLocalLogTrace;
 import tom.study.common.logger.aop.LogAop;
 
-@SpringBootApplication()
+@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @EnableFeignClients
 @PropertySource("classpath:/application.yaml")
 public class StudyApplication {

@@ -75,21 +75,11 @@ public class SecurityConfig {
 
 
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/hello") //.permitAll()
-                                .hasAnyAuthority("ROLE_ADMIN")
-                        .requestMatchers("/login**", "/api/user/signup", "/api/user/refresh").permitAll()
-                        .anyRequest().authenticated() ) //permitAll()
+                        .requestMatchers("/hello").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers("/login**", "/api/user/signup", "/api/user/refresh", "/swagger-ui/**", "/api-docs/**").permitAll()
+                        .anyRequest(). authenticated())  //permitAll()
                 .exceptionHandling( exceptionConfig -> exceptionConfig.accessDeniedHandler(customAuthenticationEntryPoint));
 
-//                .exceptionHandling((exceptionConfig) ->
-//                        exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler));
-//        http    .csrf(AbstractHttpConfigurer::disable)
-//                .formLogin(withDefaults())
-//                .addFilterBefore(requestValidationFilter, BasicAuthenticationFilter.class)
-//                .formLogin(withDefaults())
-//                .authorizeHttpRequests(authorizeRequests -> authorizeRequests.requestMatchers("/login**", "/api/user/signup", "/api/user/refresh").permitAll())
-//                    .exceptionHandling(exceptionConfig -> exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler));
-//              ); // 401 403 관련 예외처리
         return http.build();
     }
 
