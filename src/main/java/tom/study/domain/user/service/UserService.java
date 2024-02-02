@@ -4,13 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import tom.study.api.controller.user.model.QueryFavoriteRequest;
 import tom.study.domain.user.model.entity.Authority;
 import tom.study.domain.user.model.entity.Favorites;
+import tom.study.domain.user.model.entity.FavoritesCompositeKey;
 import tom.study.domain.user.model.entity.User;
 import tom.study.domain.user.repository.AuthorityRepository;
 import tom.study.domain.user.repository.FavoritesRepository;
 import tom.study.domain.user.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -30,6 +33,17 @@ public class UserService {
 
     public void delFavorites(Favorites favorites) {
         favoritesRepository.delete(favorites);
+    }
+
+    public List<Long> queryFavorites(String userName) {
+        List<Favorites> favoritesList = favoritesRepository.findAll();
+        List<Long> result = new ArrayList<>();
+        for (Favorites favorites : favoritesList) {
+            if (Objects.equals(favorites.getUserItsId().getUserName(), userName)) {
+                result.add(Long.valueOf(favorites.getUserItsId().getItstId()));
+            }
+        }
+        return result;
     }
 
     public User signupUser(User user) {

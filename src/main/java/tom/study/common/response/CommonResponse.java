@@ -23,7 +23,7 @@ public record CommonResponse<T>(int status, String code, String message, T data,
         return CommonResponse.builder().status(200).code("SUCCESS").message("OK").data("SUCCESS").build();
     }
 
-    public static CommonResponse<Object> ApiResponseUnauthorized(String message) {
+    public static CommonResponse<Object> CommonResponseUnauthorized(String message) {
         return CommonResponse.builder().status(401).code("Unauthorized").message(message).build();
     }
 
@@ -35,6 +35,9 @@ public record CommonResponse<T>(int status, String code, String message, T data,
         return ResponseEntity.status(200).body(CommonResponseSuccess("SUCCESS"));
     }
 
+    public static ResponseEntity<Object> ResponseEntityUnauthorized(String message) {
+        return ResponseEntity.status(401).body(CommonResponseUnauthorized(message));
+    }
     @Getter
     @Builder
     @RequiredArgsConstructor

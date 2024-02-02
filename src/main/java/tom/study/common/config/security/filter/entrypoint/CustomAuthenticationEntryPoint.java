@@ -23,7 +23,7 @@ public class CustomAuthenticationEntryPoint implements AccessDeniedHandler {
         log.info("![Access Denied] - AccessDeniedHandler");
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonResponse = objectMapper.writeValueAsString(
-                CommonResponse.ApiResponseUnauthorized("You do not have access")
+                CommonResponse.CommonResponseUnauthorized("You do not have access")
         );
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(String.valueOf(jsonResponse));

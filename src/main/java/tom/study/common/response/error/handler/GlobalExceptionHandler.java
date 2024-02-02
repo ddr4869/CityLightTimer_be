@@ -1,6 +1,7 @@
 package tom.study.common.response.error.handler;
 
 import feign.FeignException;
+import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -42,7 +43,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleCustomException(FeignException e) {
         log.info("FeignException", e);
         ErrorCode errorCode = CommonErrorCode.BAD_REQUEST;
-        return handleExceptionInternal(errorCode, "feign response time out");
+        return handleExceptionInternal(errorCode, "Feign response time out");
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<Object> handleCustomException(JwtException e) {
+        log.info("JwtException", e);
+        ErrorCode errorCode = CommonErrorCode.BAD_REQUEST;
+        return handleExceptionInternal(errorCode, "JWT token is not valid");
     }
 
     @Override

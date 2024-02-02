@@ -76,7 +76,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/hello").hasAnyAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/user/refresh, /api/user/favorites").authenticated()
+                        .requestMatchers("/api/user/refresh, /api/user/favorites/**").authenticated()
                         .anyRequest().permitAll() )  //authenticated()
                         // .requestMatchers("/login**", "/api/user/signup", "/api/user/refresh", "/swagger-ui/**", "/api-docs/**").permitAll()
                 .exceptionHandling( exceptionConfig -> exceptionConfig.accessDeniedHandler(customAuthenticationEntryPoint));

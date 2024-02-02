@@ -25,7 +25,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         log.info("![Login Fail] - LoginFailureHandler");
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonResponse = objectMapper.writeValueAsString(
-                CommonResponse.ApiResponseUnauthorized("Please check ID or PW")
+                CommonResponse.CommonResponseUnauthorized("Please check ID or PW")
         );
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(String.valueOf(jsonResponse));

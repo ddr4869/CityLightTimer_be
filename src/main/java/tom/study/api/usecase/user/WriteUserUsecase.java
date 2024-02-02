@@ -22,6 +22,11 @@ public class WriteUserUsecase {
 
     public ResponseEntity<Object> execute(CreateFavoriteRequest createFavoriteRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // if (authentication == "anonymousUser"), return badRequest exception
+        if (authentication.getName().equals("anonymousUser")) {
+            return CommonResponse.ResponseEntityUnauthorized("access token is not valid. please login again.");
+        }
+        log.info("authentication.getName() : " + authentication.getName());
         createFavoriteRequest.userName=authentication.getName();
         return CommonResponse.ResponseEntitySuccess(userService.addFavorites(createFavoriteRequest.ModelToEntity(createFavoriteRequest)));
     }
