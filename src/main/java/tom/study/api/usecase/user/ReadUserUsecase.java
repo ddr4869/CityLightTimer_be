@@ -22,8 +22,7 @@ public class ReadUserUsecase {
     private final UserService userService;
 
     public ResponseEntity<Object> execute(QueryFavoriteRequest queryFavoriteRequest) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return CommonResponse.ResponseEntitySuccess(userService.queryFavorites(authentication.getName()));
+        return CommonResponse.ResponseEntitySuccess(userService.queryFavorites(queryFavoriteRequest));
     }
 
 }

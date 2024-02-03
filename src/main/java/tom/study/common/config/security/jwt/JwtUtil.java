@@ -99,17 +99,16 @@ public class JwtUtil {
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token", e);
-            throw new JwtException("Invalid JWT Token");
+            return false;
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT Token", e);
-            Jws<Claims> claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
-            throw new ExpiredJwtException(claims.getHeader(), (Claims) claims, "Invalid JWT Token");
+            return false;
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT Token", e);
-            throw new UnsupportedJwtException("Unsupported JWT Token");
+            return false;
         } catch (IllegalArgumentException e) {
             log.info("JWT claims string is empty.", e);
-            throw new IllegalArgumentException();
+            return false;
         }
     }
     public Claims getClaims(String token) {
@@ -121,7 +120,6 @@ public class JwtUtil {
             throw e;
         }
     }
-
     public CustomJwtClaims getCustomClaims(Map<String, Object> payloads) throws NoSuchAlgorithmException, InvalidKeySpecException {
         if (payloads.isEmpty()) {
             log.info("!!! expired or invalid token !!!");

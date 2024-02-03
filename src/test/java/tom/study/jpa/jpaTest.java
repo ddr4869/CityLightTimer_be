@@ -6,14 +6,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import tom.study.domain.test.AUTHORITYTEST;
 import tom.study.domain.test.AUTHORITYTestRepository;
 import tom.study.domain.test.USERTest;
 import tom.study.domain.test.USERTestRepository;
 import tom.study.domain.user.model.entity.Authority;
+import tom.study.domain.user.model.entity.Favorites;
 import tom.study.domain.user.model.entity.User;
 import tom.study.domain.user.repository.AuthorityRepository;
+import tom.study.domain.user.repository.FavoritesRepository;
 import tom.study.domain.user.repository.UserRepository;
+import tom.study.domain.user.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +37,8 @@ public class jpaTest {
     UserRepository userRepository;
     @Autowired
     AuthorityRepository authorityRepository;
+    @Autowired
+    UserService userService;
 
     @Test
     void UserInsert() {
@@ -68,4 +74,15 @@ public class jpaTest {
             userRepository.delete(u);
         });
     }
+
+    @Test
+    // test for queryFavoritesPage
+    void queryFavoritesPageTest() {
+        List<Favorites> result = userService.queryFavoritesPage();
+        log.info("length: {}", result.size());
+        for (Favorites f : result) {
+            log.info("{}", f);
+        }
+    }
+
 }

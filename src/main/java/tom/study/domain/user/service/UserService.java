@@ -3,6 +3,9 @@ package tom.study.domain.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import tom.study.api.controller.user.model.QueryFavoriteRequest;
 import tom.study.domain.user.model.entity.Authority;
@@ -13,6 +16,7 @@ import tom.study.domain.user.repository.AuthorityRepository;
 import tom.study.domain.user.repository.FavoritesRepository;
 import tom.study.domain.user.repository.UserRepository;
 
+import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,15 +39,18 @@ public class UserService {
         favoritesRepository.delete(favorites);
     }
 
-    public List<Long> queryFavorites(String userName) {
-        List<Favorites> favoritesList = favoritesRepository.findAll();
+    public List<Long> queryFavorites(QueryFavoriteRequest queryFavoriteRequest) {
+        PageRequest pageRequest = PageRequest.of(queryFavoriteRequest.getPageNo(), queryFavoriteRequest.getPageSize());
+        List<Favorites> favoritesList = favoritesRepository.findByUserItsIdUserName(queryFavoriteRequest.userName, pageRequest).getContent();
         List<Long> result = new ArrayList<>();
-        for (Favorites favorites : favoritesList) {
-            if (Objects.equals(favorites.getUserItsId().getUserName(), userName)) {
-                result.add(Long.valueOf(favorites.getUserItsId().getItstId()));
-            }
-        }
+        favoritesList.forEach(favorites -> result.add(Long.valueOf(favorites.getUserItsId().getItstId())));
         return result;
+    }
+
+    public List<Favorites> queryFavoritesPage() {
+        PageRequest pageRequest = PageRequest.of(0, 4);
+        Page<Favorites> result = favoritesRepository.findAll(pageRequest);
+        return result.getContent();
     }
 
     public User signupUser(User user) {

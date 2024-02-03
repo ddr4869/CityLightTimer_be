@@ -8,10 +8,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tom.study.api.controller.user.model.QueryFavoriteRequest;
 import tom.study.api.usecase.user.ReadUserUsecase;
@@ -32,14 +35,21 @@ public class ReadUserController {
     }
 
 
-    @Operation(summary = "즐겨찾기 목록 조회", description = "즐겨찾기 목록을 조회합니다.")
+    @Operation(summary = "즐겨찾기 목록 조회", description = "즐겨찾기 목록을 조회합니다. pageNo, pageSize 기본값이 0, 100입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class))))
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = Long.class))))
     })
     @GetMapping("/favorites")
-    public ResponseEntity<Object> queryFavorites() {
-        QueryFavoriteRequest queryFavoriteRequest = new QueryFavoriteRequest();
+    public ResponseEntity<Object> queryFavorites(
+            @RequestParam(name = "pageNo", defaultValue = "0") int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "100") int pageSize)
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getName().equals("anonymousUser")) {
+            return CommonResponse.ResponseEntityUnauthorized("access token is not valid. please login again.");
+        }
+        QueryFavoriteRequest queryFavoriteRequest = new QueryFavoriteRequest(authentication.getName(), pageNo, pageSize);
         return readUserUsecase.execute(queryFavoriteRequest);
     }
 }

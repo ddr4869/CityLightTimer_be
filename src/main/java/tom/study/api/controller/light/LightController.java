@@ -25,7 +25,7 @@ import tom.study.common.response.CommonResponse;
 public class LightController {
     private final ReadLightUsecase readLightUsecase;
 
-    @Operation(summary = "신호 잔여 시간 조회", description = "교차로ID를 통해 신호 잔여 시간을 조회합니다. pageNo, numOfRows는 기본값이 1, 1입니다.")
+    @Operation(summary = "신호 잔여 시간 조회", description = "교차로ID를 통해 신호 잔여 시간을 조회합니다. pageNo, pageSize 기본값이 0, 1입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",
                     content = @Content(schema = @Schema(implementation = LightFeignMetaResponse.class))),
@@ -36,9 +36,9 @@ public class LightController {
     public ResponseEntity<Object> getLightTimingFeign(
             @RequestParam(name = "itstId") String itstId,
             @RequestParam(name = "pageNo", defaultValue = "1") String pageNo,
-            @RequestParam(name = "numOfRows", defaultValue = "1") String numOfRows
+            @RequestParam(name = "pageSize", defaultValue = "1") String pageSize
     ) {
-        LightRequest lightRequest = new LightRequest(itstId, pageNo, numOfRows);
+        LightRequest lightRequest = new LightRequest(itstId, pageNo, pageSize);
         return readLightUsecase.execute(lightRequest);
     }
 }

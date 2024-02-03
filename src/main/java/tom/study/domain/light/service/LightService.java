@@ -23,7 +23,7 @@ public class LightService {
 
     public List<LightFeignResponse> LightTimingInformation(LightRequest lightRequest) throws FeignException {
         try {
-            return lightFeignClient.LightTimingInformation(apiKey, lightRequest.getItstId(), lightRequest.getPageNo(), lightRequest.getNumOfRows());
+            return lightFeignClient.LightTimingInformation(apiKey, lightRequest.getItstId(), lightRequest.getPageNo(), lightRequest.getPageSize());
         } catch (FeignException e) {
             log.info("!!! FeignException !!!");
             throw e;
@@ -32,7 +32,7 @@ public class LightService {
 
     public List<LightFeignMetaResponse> LightTimingMetaInformation(LightRequest lightRequest) throws FeignException {
         try {
-            return lightFeignClient.LightTimingMetaInformation(apiKey, lightRequest.getItstId(), lightRequest.getPageNo(), lightRequest.getNumOfRows());
+            return lightFeignClient.LightTimingMetaInformation(apiKey, lightRequest.getItstId(), lightRequest.getPageNo(), lightRequest.getPageSize());
         } catch (FeignException e) {
             log.info("!!! FeignException !!!");
             throw e;

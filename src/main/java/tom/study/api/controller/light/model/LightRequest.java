@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 //@Getter
 @Data
 public class LightRequest {
-    public LightRequest(String itstId, String pageNo, String numOfRows) {
+    public LightRequest(String itstId, String pageNo, String pageSize) {
         this.itstId = itstId;
         this.pageNo = pageNo;
-        this.numOfRows = numOfRows;
+        this.pageSize = pageSize;
     }
     private String itstId;
     private String pageNo;
-    private String numOfRows;
+    private String pageSize;
 }
