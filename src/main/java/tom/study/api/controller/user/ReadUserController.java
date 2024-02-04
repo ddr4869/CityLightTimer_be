@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -26,6 +27,7 @@ import tom.study.domain.user.model.entity.Favorites;
 @Controller // @RestController는 thymeleaf 적용이 안됨
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
+@Tag(name = "user", description = "유저 API")
 public class ReadUserController {
     private final ReadUserUsecase readUserUsecase;
 

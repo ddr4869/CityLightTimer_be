@@ -1,6 +1,7 @@
 package tom.study.common.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,13 @@ import java.util.List;
  * @param errors Errors가 없다면 응답이 내려가지 않게 처리
  */
 @Builder
-public record CommonResponse<T>(int status, String code, String message, T data,
-                                @JsonInclude(JsonInclude.Include.NON_EMPTY) List<ValidationError> errors) {
+@Schema(description = "공통 응답")
+public record CommonResponse<T>(
+        @Schema(description = "status code")  int status,
+        @Schema(description = "응답 코드")  String code,
+        @Schema(description = "응답 메시지")  String message,
+        @Schema(description = "응답 데이터")  T data,
+        @JsonInclude(JsonInclude.Include.NON_EMPTY) List<ValidationError> errors) {
     public static CommonResponse<Object> CommonResponseSuccess(Object data) {
         return CommonResponse.builder().status(200).code("SUCCESS").message("OK").data(data).build();
     }
@@ -39,11 +45,11 @@ public record CommonResponse<T>(int status, String code, String message, T data,
         return ResponseEntity.status(200).body(CommonResponseSuccess("SUCCESS"));
     }
 
-    public static ResponseEntity<Object> ResponseEntityUnauthorized(String message) {
+    public static ResponseEntity<Object> ResponseEntityBadRequest(String message) {
         return ResponseEntity.status(400).body(CommonResponseBadRequest(message));
     }
 
-    public static ResponseEntity<Object> ResponseEntityBadRequest(String message) {
+    public static ResponseEntity<Object> ResponseEntityUnauthorized(String message) {
         return ResponseEntity.status(401).body(CommonResponseUnauthorized(message));
     }
     @Getter

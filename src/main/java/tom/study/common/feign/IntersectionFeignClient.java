@@ -17,3 +17,4 @@ public interface IntersectionFeignClient {
     @RequestMapping(method = RequestMethod.GET)
     public List<IntersectionSimpleResponse> intersectionSimpleList(@RequestParam("apiKey") String apiKey, @RequestParam("pageNo") String pageNo);
 }
+
