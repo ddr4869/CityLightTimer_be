@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  my-mysql:
+    image: mysql:8.2
+    container_name: my-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+    restart: always
+
+  my-redis-container:
+    image: redis:latest
+    container_name: my-redis-container
+    ports:
+      - "55000:6379"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    restart: always
