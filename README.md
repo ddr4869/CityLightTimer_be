@@ -35,7 +35,6 @@
     	-p 3306:3306   
     	-e MYSQL_ROOT_PASSWORD=1234
       -e MYSQL_DATABASE=test
-      -e MYSQL_USER=root   
     	mysql:8.2
     ```
 

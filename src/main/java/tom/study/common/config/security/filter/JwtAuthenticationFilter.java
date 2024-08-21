@@ -35,7 +35,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } else {
             log.info("*** Invalid token ***");
             jwtErrResponse(response, CommonErrorCode.INVALID_TOKEN);
-            return ;
         }
     }
 
